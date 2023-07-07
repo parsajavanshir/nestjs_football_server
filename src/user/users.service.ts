@@ -31,9 +31,10 @@ export class UsersService {
       return userCreated;
     } else {
       const userId = user.entity_id;
-      this.updateUser(userDTO, userId);
-      user['back'] = true;
-      return user;
+      await this.updateUser(userDTO, userId);
+      const userUpdated = userDTO;
+      userUpdated['back'] = true;
+      return userUpdated;
     }
   }
 

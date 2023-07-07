@@ -18,6 +18,11 @@ async function bootstrap() {
       whitelist: true,
     }),
   );
+  app.enableCors({
+    origin: ['http://localhost:3000'],
+    methods: ['GET', 'POST'],
+    credentials: true,
+  });
   await app.listen(3002);
 }
 bootstrap();

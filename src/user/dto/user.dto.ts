@@ -35,7 +35,6 @@ export class UserDTO {
   name: string;
 
   @ApiProperty()
-  @IsNotEmpty()
   is_active: boolean;
 
   @ApiProperty()
