@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { UsersService } from './users.service';
-import { UserDTO } from './dto';
+import { UserDTO, UserStarMatchDTO } from './dto';
 
 @ApiTags('user')
 @Controller('user')
@@ -17,6 +17,11 @@ export class UserController {
   @Post('check-register')
   async checkUserByEmail(@Body() checkRegisterUserDTO: UserDTO) {
     return await this.userSerivce.checkUserByEmail(checkRegisterUserDTO);
+  }
+
+  @Post('get-star-match')
+  async getStarMatch(@Body() userStarMatchDTO: UserStarMatchDTO) {
+    return await this.userSerivce.getStarMatch(userStarMatchDTO);
   }
 
   @Post('login')

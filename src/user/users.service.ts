@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UserEntity } from './user.entity';
-import { UserDTO } from './dto';
+import { UserDTO, UserStarMatchDTO } from './dto';
 
 @Injectable()
 export class UsersService {
@@ -32,10 +32,14 @@ export class UsersService {
     } else {
       const userId = user.entity_id;
       await this.updateUser(userDTO, userId);
-      const userUpdated = userDTO;
+      const userUpdated = this.getDetailUser(user.entity_id);
       userUpdated['back'] = true;
       return userUpdated;
     }
+  }
+
+  async getStarMatch(userStarMatchDTO: UserStarMatchDTO) {
+    
   }
 
   async createUser(userDTO: UserDTO) {

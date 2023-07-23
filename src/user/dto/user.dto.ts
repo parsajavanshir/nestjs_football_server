@@ -26,6 +26,9 @@ export class CheckRegisterUserDTO {
 
 export class UserDTO {
   @ApiProperty()
+  entity_id: number;
+
+  @ApiProperty()
   @IsEmail()
   @IsNotEmpty()
   email: string;
@@ -40,4 +43,11 @@ export class UserDTO {
   @ApiProperty()
   @IsNotEmpty()
   photoURL: string;
+}
+
+export class UserStarMatchDTO {
+  @ApiProperty()
+  @IsEmail()
+  @IsNotEmpty()
+  email: string;
 }

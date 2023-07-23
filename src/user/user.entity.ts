@@ -1,7 +1,9 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany, Unique } from 'typeorm';
 import { StarMatch } from '../match/star.entity';
 
 @Entity()
+@Unique(['email'])
+
 export class UserEntity {
   @PrimaryGeneratedColumn()
   entity_id: number;
@@ -17,6 +19,9 @@ export class UserEntity {
 
   @Column('text')
   photoURL: string;
+
+  @Column('text')
+  token: string;
 
   @Column({ default: () => 'NOW()' })
   created_at: Date;
