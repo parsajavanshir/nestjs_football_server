@@ -41,6 +41,9 @@ export class UserDTO {
   is_active: boolean;
 
   @ApiProperty()
+  token: string;
+
+  @ApiProperty()
   @IsNotEmpty()
   photoURL: string;
 }

@@ -20,7 +20,7 @@ export class UserEntity {
   @Column('text')
   photoURL: string;
 
-  @Column('text')
+  @Column({type: 'text', nullable: true })
   token: string;
 
   @Column({ default: () => 'NOW()' })

@@ -9,7 +9,6 @@ import {
 import { UserEntity } from '../user/user.entity';
 
 @Entity()
-@Index(['user_id', 'match_id'], { unique: true })
 export class StarMatch {
   @PrimaryGeneratedColumn()
   entity_id: number;
