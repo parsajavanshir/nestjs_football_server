@@ -21,7 +21,7 @@ export class UserEntity {
   photoURL: string;
 
   @Column({type: 'text', nullable: true })
-  token: string;
+  accessToken: string;
   
   @Index()
   @Column()
