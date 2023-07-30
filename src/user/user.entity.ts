@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany, Unique } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany, Unique, Index } from 'typeorm';
 import { StarMatch } from '../match/star.entity';
 
 @Entity()
@@ -22,6 +22,10 @@ export class UserEntity {
 
   @Column({type: 'text', nullable: true })
   token: string;
+  
+  @Index()
+  @Column()
+  uid: string;
 
   @Column({ default: () => 'NOW()' })
   created_at: Date;

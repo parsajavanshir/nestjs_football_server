@@ -30,21 +30,22 @@ export class UserDTO {
 
   @ApiProperty()
   @IsEmail()
-  @IsNotEmpty()
   email: string;
 
   @ApiProperty()
-  @IsNotEmpty()
+  @IsString()
   name: string;
 
   @ApiProperty()
-  is_active: boolean;
+  @IsString()
+  uid: string;
 
   @ApiProperty()
-  token: string;
+  @IsString()
+  accessToken: string;
 
   @ApiProperty()
-  @IsNotEmpty()
+  @IsString()
   photoURL: string;
 }
 

@@ -20,6 +20,9 @@ export class UsersService {
   }
 
   async checkUserByEmail(userDTO: UserDTO) {
+    if (!this.checkUserInfo(userDTO)) {
+      return false;
+    }
     const user = await this.usersRepository.findOne({
       where: {
         email: userDTO.email,
@@ -27,15 +30,21 @@ export class UsersService {
     });
     if (!user) {
       const userCreated = await this.createUser(userDTO);
-      userCreated['back'] = false;
       return userCreated;
     } else {
-      const userId = user.entity_id;
-      await this.updateUser(userDTO, userId);
-      const userUpdated = this.getDetailUser(user.entity_id);
-      userUpdated['back'] = true;
-      return userUpdated;
+      // const userId = user.entity_id;
+      // await this.updateUser(userDTO, userId);
+      const detailUser = this.getDetailUser(user.entity_id);
+      return detailUser;
     }
+  }
+
+  checkUserInfo(userDTO: UserDTO) {
+    if (!userDTO.uid || !userDTO.name || !userDTO.uid || !userDTO.uid) {
+      return false;
+    }
+
+    return true;
   }
 
   async getStarMatch(userStarMatchDTO: UserStarMatchDTO) {

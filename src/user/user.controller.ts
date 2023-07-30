@@ -1,7 +1,8 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Ip } from '@nestjs/common';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { UsersService } from './users.service';
 import { UserDTO, UserStarMatchDTO } from './dto';
+import { RealIP } from 'nestjs-real-ip';
 
 @ApiTags('user')
 @Controller('user')
@@ -15,7 +16,11 @@ export class UserController {
   }
 
   @Post('check-register')
-  async checkUserByEmail(@Body() checkRegisterUserDTO: UserDTO) {
+  async checkUserByEmail(@Body() checkRegisterUserDTO: UserDTO, @RealIP() ip: string) {
+    // block request if query many time by IP
+    // console.log('====================================');
+    // console.log(checkRegisterUserDTO);
+    // console.log('====================================');
     return await this.userSerivce.checkUserByEmail(checkRegisterUserDTO);
   }
 
