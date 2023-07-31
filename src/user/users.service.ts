@@ -20,9 +20,6 @@ export class UsersService {
   }
 
   async checkUserByEmail(userDTO: UserDTO) {
-    if (!this.checkUserInfo(userDTO)) {
-      return false;
-    }
     const user = await this.usersRepository.findOne({
       where: {
         email: userDTO.email,
@@ -34,17 +31,9 @@ export class UsersService {
     } else {
       // const userId = user.entity_id;
       // await this.updateUser(userDTO, userId);
-      const detailUser = this.getDetailUser(user.entity_id);
+      const detailUser = await this.getDetailUser(user.entity_id);
       return detailUser;
     }
-  }
-
-  checkUserInfo(userDTO: UserDTO) {
-    if (!userDTO.uid || !userDTO.name || !userDTO.uid || !userDTO.uid) {
-      return false;
-    }
-
-    return true;
   }
 
   async getStarMatch(userStarMatchDTO: UserStarMatchDTO) {

@@ -12,7 +12,7 @@ export class UserController {
   @Get()
   @ApiOkResponse({ description: 'List all users' })
   async getUserList() {
-    return await this.userSerivce.getUserList();
+    // return await this.userSerivce.getUserList();
   }
 
   @Post('check-register')
@@ -21,12 +21,12 @@ export class UserController {
     // console.log('====================================');
     // console.log(checkRegisterUserDTO);
     // console.log('====================================');
-    return await this.userSerivce.checkUserByEmail(checkRegisterUserDTO);
+    // return await this.userSerivce.checkUserByEmail(checkRegisterUserDTO);
   }
 
   @Post('get-star-match')
   async getStarMatch(@Body() userStarMatchDTO: UserStarMatchDTO) {
-    return await this.userSerivce.getStarMatch(userStarMatchDTO);
+    // return await this.userSerivce.getStarMatch(userStarMatchDTO);
   }
 
   @Post('login')
@@ -36,6 +36,6 @@ export class UserController {
 
   @Delete(':entity_id')
   remove(@Param('entity_id') entity_id: number) {
-    return this.userSerivce.remove(entity_id);
+    // return this.userSerivce.remove(entity_id);
   }
 }

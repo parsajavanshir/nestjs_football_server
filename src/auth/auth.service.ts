@@ -13,26 +13,30 @@ export class AuthService {
     ) {}
 
     async signIn(userDTO: UserDTO) {
-        const user = await this.usersService.checkUserByEmail(userDTO);
-        this.firebaseApp.getAuth().verifyIdToken(userDTO.accessToken)
+      try {
+        let validUserData = true;
+        await this.firebaseApp.getAuth().verifyIdToken(userDTO.accessToken)
         .then((decodedToken) => {
-          console.log('====================================');
-          console.log(decodedToken);
-          console.log('====================================');
+          if (userDTO.email != decodedToken.email) {
+            validUserData = false;
+          }
         }).catch((error) => {
-          console.log('====================================');
-          console.log("ERRORR");
-          console.log('====================================');
+          // console.log(error);
+          return false;
         });
-        if (!user) {
-            return false;
+  
+        if (!validUserData) {
+          return false;
         }
-        // // if (user?.password !== pass) {
-        // //   throw new UnauthorizedException();
-        // // }
+        
+        const user = await this.usersService.checkUserByEmail(userDTO);
         const payload = { sub: user.entity_id, email: user.email };
         return {
           access_token: await this.jwtService.signAsync(payload),
         };
+      } catch (error) {
+        // console.log(error);
+        return false;
       }
+    }
 }
