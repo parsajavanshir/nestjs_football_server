@@ -4,13 +4,15 @@ import {
     Injectable,
     UnauthorizedException,
   } from '@nestjs/common';
-  import { JwtService } from '@nestjs/jwt';
+  import { FirebaseApp } from './../firebase/firebase.app';
   import { jwtConstants } from './constants';
   import { Request } from 'express';
   
   @Injectable()
   export class AuthGuard implements CanActivate {
-    constructor(private jwtService: JwtService) {}
+    constructor(
+      private firebaseApp: FirebaseApp
+      ) {}
   
     async canActivate(context: ExecutionContext): Promise<boolean> {
       const request = context.switchToHttp().getRequest();
@@ -18,20 +20,27 @@ import {
       if (!token) {
         throw new UnauthorizedException();
       }
+      let validToken = true;
       try {
-        const payload = await this.jwtService.verifyAsync(
-          token,
-          {
-            secret: jwtConstants.secret
+        await this.firebaseApp.getAuth().verifyIdToken(token)
+        .then((decodedToken) => {
+          if (!decodedToken.email) {
+            validToken = false;
           }
-        );
-        // 💡 We're assigning the payload to the request object here
-        // so that we can access it in our route handlers
-        request['user'] = payload;
-      } catch {
+        }).catch((error) => {
+          if (error.code == 'auth/id-token-expired') {
+            throw new UnauthorizedException("auth/id-token-expired");
+          }
+        });
+      } catch (error) {
+        throw new UnauthorizedException(error.message);
+      }
+
+      if (!validToken) {
         throw new UnauthorizedException();
       }
-      return true;
+
+      return validToken;
     }
   
     private extractTokenFromHeader(request: Request): string | undefined {
