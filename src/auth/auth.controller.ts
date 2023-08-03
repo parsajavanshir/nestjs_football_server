@@ -19,10 +19,4 @@ export class AuthController {
     checkUserToken(@Body() token: TokenDTO) {
         return this.authService.checkUserToken(token);
     }
-
-    @UseGuards(AuthGuard)
-    @Get('profile')
-    getProfile(@Request() req) {
-        return req.user;
-    }
 }

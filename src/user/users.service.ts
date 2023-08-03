@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UserEntity } from './user.entity';
-import { UserDTO, UserStarMatchDTO } from './dto';
+import { UserDTO } from './dto';
 
 @Injectable()
 export class UsersService {
@@ -29,19 +29,32 @@ export class UsersService {
       const userCreated = await this.createUser(userDTO);
       return userCreated;
     } else {
-      // const userId = user.entity_id;
-      // await this.updateUser(userDTO, userId);
+      const userId = user.entity_id;
+      await this.updateUser(userDTO, userId);
       const detailUser = await this.getDetailUser(user.entity_id);
       return detailUser;
     }
   }
 
-  async getStarMatch(userStarMatchDTO: UserStarMatchDTO) {
-    
-  }
-
   async createUser(userDTO: UserDTO) {
     return await this.usersRepository.save(userDTO);
+  }
+
+  async findIdByEmail(email: string) {
+    try {
+      const user = await this.usersRepository.findOne({
+        where: {
+          email: email,
+        },
+      });
+      if (!user) {
+        return false;
+      }
+
+      return user.entity_id;
+    } catch (error) {
+      return false;
+    }
   }
 
   async updateUser(userDTO: UserDTO, id: number) {

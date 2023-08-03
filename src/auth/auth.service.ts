@@ -1,5 +1,5 @@
 import { FirebaseApp } from './../firebase/firebase.app';
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { UsersService } from 'src/user/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { UserDTO } from 'src/user/dto';
@@ -23,6 +23,7 @@ export class AuthService {
         const user = await this.usersService.checkUserByEmail(userDTO);
         const payload = { sub: user.entity_id, email: user.email };
         return {
+          user_id: user.entity_id,
           access_token: await this.jwtService.signAsync(payload),
         };
       } catch (error) {
