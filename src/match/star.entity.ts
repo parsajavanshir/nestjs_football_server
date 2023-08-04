@@ -4,17 +4,17 @@ import {
   PrimaryGeneratedColumn,
   JoinColumn,
   ManyToOne,
-  Index,
+  Unique
 } from 'typeorm';
 import { UserEntity } from '../user/user.entity';
 
 @Entity()
+@Unique(['user_id'])
 export class StarMatch {
   @PrimaryGeneratedColumn()
   entity_id: number;
 
   @Column()
-  @Index()
   user_id: number;
 
   @Column('text')
