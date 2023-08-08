@@ -1,13 +1,15 @@
 import { CrawlLiveContent } from './crawl/live_content.entity';
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule, RequestMethod} from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserEntity } from './user/user.entity';
 import { StarMatch } from './match/star.entity';
 import { UserModule } from './user/user.module';
-import { AuthModule } from './auth/auth.module';
 import { StarModule } from './match/star.module';
+import { AuthGuard } from "./auth/auth.guard";
+import { FirebaseApp } from "./firebase/firebase.app";
+import { AuthModule } from "./auth/auth.module";
 
 @Module({
   imports: [
@@ -22,10 +24,28 @@ import { StarModule } from './match/star.module';
       synchronize: true,
     }),
     UserModule,
-    AuthModule,
-    StarModule
+    StarModule,
+    AuthModule
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+      AppService,
+      FirebaseApp
+  ],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer): any {
+    consumer.apply(AuthGuard).forRoutes({
+      path: '/auth/*',
+      method: RequestMethod.ALL,
+    });
+    consumer.apply(AuthGuard).forRoutes({
+      path: '/star/*',
+      method: RequestMethod.ALL,
+    });
+    consumer.apply(AuthGuard).forRoutes({
+      path: '/user/*',
+      method: RequestMethod.ALL,
+    });
+  }
+}

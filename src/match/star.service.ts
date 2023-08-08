@@ -44,6 +44,7 @@ export class StarService {
                 return false;
             }
 
+            //F3 ticket check can Json or not
             if (!Array.isArray(JSON.parse(starMatch.match_id))) {
               await this.starMatchRepository.delete(starMatch.entity_id);
               return false;
@@ -51,20 +52,6 @@ export class StarService {
 
             return starMatch;
     
-        } catch (error) {
-          // console.log(error);
-          return false;
-        }
-    }
-
-    async getUserIdByEmail(getUserIdByEmailDTO: GetUserIdByEmailDTO) {
-        try {
-            let userId = await this.usersService.findIdByEmail(getUserIdByEmailDTO.email);
-            if (!userId) {
-                return false;
-            }
-
-            return userId;
         } catch (error) {
           // console.log(error);
           return false;

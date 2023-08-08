@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { UserEntity } from './user.entity';
-import { UserDTO } from './dto';
+import {Injectable} from '@nestjs/common';
+import {InjectRepository} from '@nestjs/typeorm';
+import {Repository} from 'typeorm';
+import {UserEntity} from './user.entity';
+import {GetUserIdByUidDTO, UserDTO} from './dto';
 
 @Injectable()
 export class UsersService {
@@ -11,14 +11,6 @@ export class UsersService {
     private usersRepository: Repository<UserEntity>,
   ) {}
 
-  createOneUser(createUserDTO: UserDTO) {
-    return this.usersRepository.save(createUserDTO);
-  }
-
-  getUserList() {
-    return this.usersRepository.find({});
-  }
-
   async checkUserByEmail(userDTO: UserDTO) {
     const user = await this.usersRepository.findOne({
       where: {
@@ -26,13 +18,11 @@ export class UsersService {
       },
     });
     if (!user) {
-      const userCreated = await this.createUser(userDTO);
-      return userCreated;
+      return await this.createUser(userDTO);
     } else {
       const userId = user.entity_id;
       await this.updateUser(userDTO, userId);
-      const detailUser = await this.getDetailUser(user.entity_id);
-      return detailUser;
+      return await this.getDetailUser(user.entity_id);
     }
   }
 
@@ -40,11 +30,11 @@ export class UsersService {
     return await this.usersRepository.save(userDTO);
   }
 
-  async findIdByEmail(email: string) {
+  async findUserIdByUid(getUserIdByUidDTO: GetUserIdByUidDTO) {
     try {
       const user = await this.usersRepository.findOne({
         where: {
-          email: email,
+          uid: getUserIdByUidDTO.uid,
         },
       });
       if (!user) {
@@ -71,5 +61,13 @@ export class UsersService {
 
   async remove(id: number): Promise<void> {
     await this.usersRepository.delete(id);
+  }
+
+  createOneUser(createUserDTO: UserDTO) {
+    return this.usersRepository.save(createUserDTO);
+  }
+
+  getUserList() {
+    return this.usersRepository.find({});
   }
 }

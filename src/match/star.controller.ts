@@ -10,6 +10,7 @@ export class StarController {
     saveStarMatchForUser(@Body() starMatchForUserDTO: SaveStarMatchForUserDTO) {
         return this.starService.saveMatchForUser(starMatchForUserDTO);
     }
+
     @Post('get-star-match')
     getStarMatchByUser(@Body() getStarMatchForUserDTO: GetStarMatchForUserDTO) {
         return this.starService.getStarMatchByUser(getStarMatchForUserDTO);

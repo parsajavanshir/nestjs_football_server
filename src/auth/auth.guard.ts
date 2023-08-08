@@ -1,50 +1,43 @@
 import {
-    CanActivate,
-    ExecutionContext,
-    Injectable,
-    UnauthorizedException,
-  } from '@nestjs/common';
-  import { FirebaseApp } from './../firebase/firebase.app';
-  import { jwtConstants } from './constants';
-  import { Request } from 'express';
-  
+  Injectable, NestMiddleware
+} from '@nestjs/common';
+import { FirebaseApp } from '../firebase/firebase.app';
+import { Request, Response } from 'express';
+
   @Injectable()
-  export class AuthGuard implements CanActivate {
+  export class AuthGuard implements NestMiddleware {
     constructor(
       private firebaseApp: FirebaseApp
       ) {}
-  
-    async canActivate(context: ExecutionContext): Promise<boolean> {
-      const request = context.switchToHttp().getRequest();
-      const token = this.extractTokenFromHeader(request);
-      if (!token) {
-        throw new UnauthorizedException();
-      }
-      let validToken = true;
-      try {
-        await this.firebaseApp.getAuth().verifyIdToken(token)
-        .then((decodedToken) => {
-          if (!decodedToken.email) {
-            validToken = false;
-          }
-        }).catch((error) => {
-          if (error.code == 'auth/id-token-expired') {
-            throw new UnauthorizedException("auth/id-token-expired");
-          }
-        });
-      } catch (error) {
-        throw new UnauthorizedException(error.message);
-      }
 
-      if (!validToken) {
-        throw new UnauthorizedException();
+    use(req: Request, res: Response, next: () => void) {
+      let token = req.headers.authorization;
+      token = token.replace('Bearer ', '');
+      console.log(token)
+      if (token != null && token != '') {
+        let validToken = true;
+        try {
+          this.firebaseApp.getAuth().verifyIdToken(token)
+              .then(async (decodedToken) => {
+                if (!decodedToken.email) {
+                  validToken = false;
+                }
+                next();
+              }).catch((error) => {
+                // if (error.code == 'auth/id-token-expired') {
+                //   throw new UnauthorizedException("auth/id-token-expired");
+                // }
+                AuthGuard.accessDenied(res);
+              });
+        } catch (error) {
+          AuthGuard.accessDenied(res);
+        }
+      } else {
+        AuthGuard.accessDenied(res);
       }
-
-      return validToken;
     }
-  
-    private extractTokenFromHeader(request: Request): string | undefined {
-      const [type, token] = request.headers.authorization?.split(' ') ?? [];
-      return type === 'Bearer' ? token : undefined;
+
+    private static accessDenied(res: Response) {
+      res.status(403).json(false);
     }
   }

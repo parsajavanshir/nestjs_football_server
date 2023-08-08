@@ -1,14 +1,13 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany, Unique, Index } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { StarMatch } from '../match/star.entity';
 
 @Entity()
-@Unique(['email'])
 
 export class UserEntity {
   @PrimaryGeneratedColumn()
   entity_id: number;
 
-  @Column()
+  @Column({ unique: true })
   email: string;
 
   @Column()
@@ -22,9 +21,8 @@ export class UserEntity {
 
   @Column({type: 'text', nullable: true })
   accessToken: string;
-  
-  @Index()
-  @Column()
+
+  @Column({ unique: true })
   uid: string;
 
   @Column({ default: () => 'NOW()' })

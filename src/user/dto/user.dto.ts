@@ -2,26 +2,9 @@
 import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
-export class AuthDTO {
-  @IsEmail()
+export class GetUserIdByUidDTO {
   @IsNotEmpty()
-  email: string;
-
-  @IsString()
-  @IsNotEmpty()
-  password: string;
-}
-
-export class CheckRegisterUserDTO {
-  @IsEmail()
-  @IsNotEmpty()
-  email: string;
-
-  @IsNotEmpty()
-  name: string;
-
-  @IsNotEmpty()
-  photoURL: string;
+  uid: string;
 }
 
 export class UserDTO {
@@ -47,11 +30,4 @@ export class UserDTO {
   @ApiProperty()
   @IsString()
   photoURL: string;
-}
-
-export class UserStarMatchDTO {
-  @ApiProperty()
-  @IsEmail()
-  @IsNotEmpty()
-  email: string;
 }
