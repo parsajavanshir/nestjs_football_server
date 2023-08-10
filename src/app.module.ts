@@ -1,4 +1,3 @@
-import { EavAttribute } from './eav/eav.attibute';
 import { CrawlLiveContent } from './crawl/live_content.entity';
 import { MiddlewareConsumer, Module, NestModule, RequestMethod} from '@nestjs/common';
 import { AppController } from './app.controller';
@@ -11,18 +10,20 @@ import { StarModule } from './match/star.module';
 import { AuthGuard } from "./auth/auth.guard";
 import { FirebaseApp } from "./firebase/firebase.app";
 import { AuthModule } from "./auth/auth.module";
-import { EavAttributeType } from './eav/eav.attribute.type';
+import {BotRandomEntity} from "./bot-random/bot.entity";
+import {BotEavAttribute} from "./bot-random/bot.eav.attribute";
+import {BotEavAttributeValue} from "./bot-random/bot.eav.attribute.value";
 
 @Module({
   imports: [
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: 'localhost',
-      port: 3306,
+      port: 3309,
       username: 'root',
-      password: '',
+      password: 'admin123',
       database: 'soccer_fly',
-      entities: [UserEntity, StarMatch, CrawlLiveContent, EavAttributeType, EavAttribute],
+      entities: [UserEntity, StarMatch, CrawlLiveContent, BotRandomEntity, BotEavAttribute, BotEavAttributeValue],
       synchronize: true,
     }),
     UserModule,

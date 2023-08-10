@@ -1,16 +1,16 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
+import {Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn, Unique} from 'typeorm';
 import { EavAttributeType } from './eav.attribute.type';
 
 @Entity()
-
+@Unique(['type_id', 'attribute_code'])
 export class EavAttribute {
   @PrimaryGeneratedColumn()
-  entity_id: number;
+  attribute_id: number;
 
   @Column()
   type_id: number;
 
-  @Column({ unique: true })
+  @Column()
   attribute_code: string;
 
   @Column()
@@ -20,6 +20,6 @@ export class EavAttribute {
   type_input: string;
 
   @ManyToOne(() => EavAttributeType, (EavAttributeType) => EavAttributeType.eavAttrs, { cascade: true })
-  @JoinColumn([{ name: 'type_id', referencedColumnName: 'type_id' }])
+  @JoinColumn([{ name: 'type_id', referencedColumnName: 'entity_type_id' }])
   eavTypes: EavAttributeType;
 }

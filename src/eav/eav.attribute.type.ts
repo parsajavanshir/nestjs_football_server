@@ -7,7 +7,7 @@ export class EavAttributeType {
   @PrimaryGeneratedColumn()
   type_id: number;
 
-  @Column({ unique: true })
+  @Column()
   entity_type_code: string;
 
   @Column({ unique: true })

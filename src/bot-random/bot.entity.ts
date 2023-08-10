@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import {Entity, Column, PrimaryGeneratedColumn, OneToMany} from 'typeorm';
+import {BotEavAttributeValue} from "./bot.eav.attribute.value";
 
 @Entity()
 
@@ -8,4 +9,11 @@ export class BotRandomEntity {
 
   @Column({ unique: true })
   name: string;
+
+  @OneToMany(
+      () => BotEavAttributeValue,
+      (BotEavAttributeValue) => BotEavAttributeValue.bot,
+      { onDelete: 'CASCADE' },
+  )
+  botEavValues: BotEavAttributeValue[];
 }
