@@ -6,7 +6,7 @@ import {
   ManyToOne,
   Unique
 } from 'typeorm';
-import { UserEntity } from '../user/user.entity';
+import { UserEntity } from '../../user/entity/user.entity';
 
 @Entity()
 @Unique(['user_id'])

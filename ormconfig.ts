@@ -5,7 +5,7 @@ export = {
   username: 'root',
   password: 'admin123',
   database: 'soccer_fly',
-  entities: ['dist/**/*.entity.js'],
+  entities: ['src/**/entity/**.ts'],
   migrations: ['./src/migration/*.ts'],
   cli: {
     migrationsDir: 'src/migration',

@@ -1,5 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
-import { StarMatch } from '../match/star.entity';
+import { StarMatch } from '../../match/entity/star.entity';
 
 @Entity()
 

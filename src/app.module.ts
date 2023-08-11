@@ -1,18 +1,24 @@
-import { CrawlLiveContent } from './crawl/live_content.entity';
+import { CrawlLiveContent } from './crawl/entity/live_content.entity';
 import { MiddlewareConsumer, Module, NestModule, RequestMethod} from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UserEntity } from './user/user.entity';
-import { StarMatch } from './match/star.entity';
+import { UserEntity } from './user/entity/user.entity';
+import { StarMatch } from './match/entity/star.entity';
 import { UserModule } from './user/user.module';
 import { StarModule } from './match/star.module';
 import { AuthGuard } from "./auth/auth.guard";
 import { FirebaseApp } from "./firebase/firebase.app";
 import { AuthModule } from "./auth/auth.module";
-import {BotRandomEntity} from "./bot-random/bot.entity";
-import {BotEavAttribute} from "./bot-random/bot.eav.attribute";
-import {BotEavAttributeValue} from "./bot-random/bot.eav.attribute.value";
+import { BotModule } from './bot-random/bot.module';
+import {BotRandomEntity} from "./bot-random/entity/bot.entity";
+import {BotEavAttributeValue} from "./bot-random/entity/bot.eav.attribute.value";
+import { EavAttribute } from './eav/entity/eav.attribute';
+import { EavAttributeType } from './eav/entity/eav.attribute.type';
+import {NewMatchEntity} from "./match/entity/new.match.entity";
+import {MatchEavAttributeValue} from "./match/entity/match.eav.attribute.value";
+import {LeagueEntity} from "./league/league.entity";
+import {EavModule} from "./eav/eav.module";
 
 @Module({
   imports: [
@@ -23,12 +29,16 @@ import {BotEavAttributeValue} from "./bot-random/bot.eav.attribute.value";
       username: 'root',
       password: 'admin123',
       database: 'soccer_fly',
-      entities: [UserEntity, StarMatch, CrawlLiveContent, BotRandomEntity, BotEavAttribute, BotEavAttributeValue],
+      entities: [
+          UserEntity, StarMatch, CrawlLiveContent, NewMatchEntity, MatchEavAttributeValue, LeagueEntity,
+        BotRandomEntity, EavAttribute, EavAttributeType, BotEavAttributeValue],
       synchronize: true,
     }),
     UserModule,
     StarModule,
-    AuthModule
+    AuthModule,
+    BotModule,
+    EavModule
   ],
   controllers: [AppController],
   providers: [

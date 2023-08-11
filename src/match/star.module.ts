@@ -2,10 +2,10 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { StarController } from './star.controller';
 import { StarService } from './star.service';
-import { StarMatch } from './star.entity';
-import { UsersService } from 'src/user/users.service';
-import { UserModule } from 'src/user/user.module';
-import { UserEntity } from 'src/user/user.entity';
+import { StarMatch } from './entity/star.entity';
+import {UserModule} from "../user/user.module";
+import {UserEntity} from "../user/entity/user.entity";
+import {UsersService} from "../user/users.service";
 
 @Module({
   imports: [

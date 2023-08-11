@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { SaveStarMatchForUserDTO, GetStarMatchForUserDTO, GetUserIdByEmailDTO } from './dto';
-import { StarMatch } from './star.entity';
+import { StarMatch } from './entity/star.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UsersService } from 'src/user/users.service';
+import {UsersService} from "../user/users.service";
 
 @Injectable()
 export class StarService {

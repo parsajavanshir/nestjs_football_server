@@ -1,11 +1,11 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
-import { EavAttribute } from './eav.attibute';
+import { EavAttribute } from './eav.attribute';
 
 @Entity()
 
 export class EavAttributeType {
   @PrimaryGeneratedColumn()
-  type_id: number;
+  entity_type_id: number;
 
   @Column()
   entity_type_code: string;
@@ -15,7 +15,7 @@ export class EavAttributeType {
 
   @OneToMany(
     () => EavAttribute,
-    (EavAttribute) => EavAttribute.eavTypes,
+    (EavAttribute) => EavAttribute.eavType,
     { onDelete: 'CASCADE' },
   )
   eavAttrs: EavAttribute[];
