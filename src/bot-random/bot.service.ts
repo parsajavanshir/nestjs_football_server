@@ -34,7 +34,9 @@ export class BotService {
         if (createBotDTO.token !== 'huykuy99') {
             return 'False';
         }
-        return this.generateOverUnderArray();
+        let overUnderData =  this.generateOverUnderArray();
+        let oddData =  this.generateOddArray();
+        let allBettingData =  this.generateOddArray();
     }
 
     generateOddArray(): object {
