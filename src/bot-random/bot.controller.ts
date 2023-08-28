@@ -9,6 +9,6 @@ export class BotController {
     //curl -X POST -d 'token=huykuy99' http://localhost:3002/bot/create-bot
     @Post('create-bot')
     saveStarMatchForUser(@Body() createBotDTO: CreateBotDTO) {
-        return this.botService.createBot(createBotDTO);
+        return this.botService.createSingleBot(createBotDTO);
     }
 }

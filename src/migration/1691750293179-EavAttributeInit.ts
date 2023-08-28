@@ -60,12 +60,12 @@ export class EavAttributeInit1691750293179 implements MigrationInterface {
             },{
                 type_id: eavTypeBotRandom.entity_type_id,
                 attribute_code: 'position_range_of_first_team',
-                attribute_label: 'Position range of first team',
+                attribute_label: 'Position range of home team',
                 type_input: 'object'
             },{
                 type_id: eavTypeBotRandom.entity_type_id,
                 attribute_code: 'position_range_of_second_team',
-                attribute_label: 'Position range of second team',
+                attribute_label: 'Position range of away team',
                 type_input: 'object'
             },{
                 type_id: eavTypeBotRandom.entity_type_id,
