@@ -1,30 +1,29 @@
+import { BotGenerator } from './model/bot.generator';
 import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import {BotRandomEntity} from "./entity/bot.entity";
+import { BotEavAttributeValue } from './entity/bot.eav.attribute.value';
 import { CreateBotDTO } from './dto';
+import { BotResource } from './model/bot.resource';
+import { BotBuilder } from './model/bot.builder';
 
 @Injectable()
 export class BotService {
-    odd_range = 1.5;
+    odd_range = 0;
+    start_over_under_value = 3.75;
     over_under_range = 3.75;
     all_odd = true;
-
     league_name = [];
-
     bettingObj = [
         'min_total_match', 'odd', 'over_under'
     ]
     match_amount = 4;
-    min_total_match_range = {
-        min: 5,
-        max: 10
-    };
+    min_total_match_range = {min: 5,max: 10};
     position_range = {
         from: 1,
         to: 10
     };
-
     other_bet_options = [
         'over',
         'under',
@@ -32,19 +31,17 @@ export class BotService {
         'underdog',
         'random_each_match',
         'none'
-    ]
-
-    bet_in_match = [
-        'over',
-        'under',
-        'favorite',
-        'underdog'
-    ]
-
+    ];
+    bet_in_match = ['over', 'under', 'favorite', 'underdog'];
 
     constructor(
         @InjectRepository(BotRandomEntity)
-        private starMatchRepository: Repository<BotRandomEntity>,
+        private bothRepository: Repository<BotRandomEntity>,
+        @InjectRepository(BotEavAttributeValue)
+        private botEavAttributeValue: Repository<BotEavAttributeValue>,
+        private botGenerator: BotGenerator,
+        private botResource: BotResource,
+        private botBuilder: BotBuilder,
     ) {}
 
     // save star match
@@ -55,29 +52,60 @@ export class BotService {
         if (createBotDTO.token !== 'huykuy99') {
             return 'False';
         }
-        let overUnderData =  this.generateOverUnderArray();
+        let overUnderData = this.generateOverUnderArray();
         let oddData =  this.generateOddArray();
-        let minTotalMatch =  this.generateMinTotalMatchArray();
-        overUnderData.forEach(elem => {
-            let attributeData = {};
-            attributeData['over_under'] = elem;
-            attributeData['match_amount'] = this.match_amount;
-        });
+        let min_total_match =  6;
+        let dataEav = this.generateBulkRandomOdd(oddData, overUnderData);
+        let maxBotId, botName: string, attributeId, newBot;
+        var eavStorage = {};
+        try {
+            maxBotId = await this.botResource.getMaxBotId();
+            if (!maxBotId) {
+                return;
+            }
+            botName = this.botGenerator.generatorBotName(maxBotId);
+            newBot = await this.bothRepository.save({name: botName});
+            dataEav.forEach(async botEav => {
+                botEav.forEach(async attrObj => {
+                    let attributeCode = Object.keys(attrObj)[0];
+                    console.log('=================attributeCode===================');
+                    console.log(eavStorage);
+                    console.log(attributeCode);
+                    console.log('=================attributeCode===================');
+                    if (eavStorage.hasOwnProperty(attributeCode)){
+                        attributeId = eavStorage[attributeCode];
+                    } else {
+                        attributeId = await this.botResource.findEavIdByCode(attributeCode);
+                        eavStorage[attributeCode] = attributeId;
+                        console.log('===============attributeId=====================');
+                        console.log(eavStorage);
+                        console.log(attributeId);
+                        console.log('=================attributeId===================');
+                    }
+                });
+            });
+          } catch (error) {
+            maxBotId = false;
+          }
+        return dataEav;
     }
 
-    prepareBettingObject()
+    generateBulkRandomOdd(oddData, overUnderData)
     {
-        let bettingObj = this.getCombinations(this.bettingObj, 4);
-        let data = [];
+        let allOdd = oddData.concat(overUnderData);
+        let combine = this.getCombinations(allOdd, 4);
+        let dataWithBetInMatch = [];
+        //add bet in match data
         this.bet_in_match.forEach(elememt => {
-            bettingObj.forEach(elem => {
+            combine.forEach(elem => {
                 let obj = {};
                 let flag = [...elem];
                 obj["bet_in_match"] = elememt;
                 flag.push(obj);
-                data.push(flag);
-            });
+                dataWithBetInMatch.push(flag);
+            })
         });
+        return dataWithBetInMatch;
     }
 
     getCombinations(valuesArray, max = 0)
@@ -105,7 +133,9 @@ export class BotService {
                 combi.push(temp);
             }
         }
-        combi.sort((a, b) => a.length - b.length);
+
+        //will take long time
+        // combi.sort((a, b) => a.length - b.length);
         return combi;
     }
 
@@ -122,6 +152,19 @@ export class BotService {
         return oddArr;
     }
 
+    generateOverUnderArray() {
+        let overUnderArr = [];
+        let value = this.start_over_under_value;
+        while (value <= this.over_under_range) {
+            let obj = {};
+            obj['over_under'] = value;
+            overUnderArr.push(obj);
+            value += 0.25;
+        }
+
+        return overUnderArr;
+    }
+
     generateMinTotalMatchArray() {
         let arr = [];
         let min = this.min_total_match_range.min;
@@ -133,18 +176,5 @@ export class BotService {
             min ++;
         }
         return arr;
-    }
-
-    generateOverUnderArray() {
-        let overUnderArr = [];
-        let value = 1.5;
-        while (value <= this.over_under_range) {
-            let obj = {};
-            obj['over_under'] = value;
-            overUnderArr.push(obj);
-            value += 0.25;
-        }
-
-        return overUnderArr;
     }
 }

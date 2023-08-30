@@ -25,9 +25,9 @@ import {EavModule} from "./eav/eav.module";
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: 'localhost',
-      port: 3309,
+      port: 3306,
       username: 'root',
-      password: 'admin123',
+      password: '',
       database: 'soccer_fly',
       entities: [
           UserEntity, StarMatch, CrawlLiveContent, NewMatchEntity, MatchEavAttributeValue, LeagueEntity,

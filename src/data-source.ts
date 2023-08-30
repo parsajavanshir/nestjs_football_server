@@ -13,9 +13,9 @@ import {LeagueEntity} from "./league/league.entity";
 export const AppDataSource = new DataSource({
     type: "mysql",
     host: "localhost",
-    port: 3309,
+    port: 3306,
     username: "root",
-    password: "admin123",
+    password: "",
     database: "soccer_fly",
     synchronize: true,
     logging: true,
