@@ -7,6 +7,6 @@ export class BotGenerator {
      */
     generatorBotName(max_id: number)
     {
-        return "BOT_" + max_id; 
+        return "BOT_" + (max_id + 1); 
     }
 }
