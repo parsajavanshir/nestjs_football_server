@@ -20,6 +20,7 @@ export class BotService {
         'min_total_match', 'odd', 'over_under'
     ]
     match_amount = 4;
+    min_total_match_default =  6;
     min_total_match_range = {min: 5,max: 10};
     position_range = {
         from: 1,
@@ -55,81 +56,61 @@ export class BotService {
         }
         let overUnderData = this.generateOverUnderArray();
         let oddData =  this.generateOddArray();
-        let min_total_match =  6;
         let dataEav = this.generateBulkRandomOdd(oddData, overUnderData);
-        let maxBotId, botName: string, newBot;
+        let maxBotId;
         var eavStorage = {};
         let isAbnormal = false;
         try {
-            // await Promise.all(dataEav.map(async (botEav) => {
-            //     await Promise.all(botEav.map(async (attrObj) => {
-            //         let attributeCode = Object.keys(attrObj)[0];
-            //         let attributeId = await this.botResource.findEavIdByCode(attributeCode);
-            //         if (eavStorage.hasOwnProperty(attributeCode)){
-            //             attributeId = eavStorage[attributeCode];
-            //         } else {
-            //             attributeId = await this.botResource.findEavIdByCode(attributeCode);
-            //             eavStorage[attributeCode] = attributeId;
-            //         }
-            //     }));
-            // }));
+            console.log('====================================');
+            console.log(dataEav);
+            console.log('====================================');
+            await Promise.all(dataEav.map(async (botEav) => {
+                await Promise.all(botEav.map(async (attrObj) => {
+                    let attributeCode = Object.keys(attrObj)[0];
+                    let attributeId = await this.botResource.findEavIdByCode(attributeCode);
+                    if (eavStorage.hasOwnProperty(attributeCode)){
+                        attributeId = eavStorage[attributeCode];
+                    } else {
+                        attributeId = await this.botResource.findEavIdByCode(attributeCode);
+                        eavStorage[attributeCode] = attributeId;
+                    }
+                }));
+            }));
             // console.log('====================================');
-            console.log('oke');
             // console.log(eavStorage);
             // console.log('====================================');
-            
-            // await Promise.all(dataEav.map(async (botEav) => {
-            //     console.log('start');
-            //     await this.botResource.getMaxBotId();
-            //     console.log('end');
-            // }));
 
-            for (const player of dataEav) {
+            for (const botEav of dataEav) {
                 console.log('start');
-                await this.botResource.getMaxBotId();
+                let maxBotId = await this.botResource.getMaxBotId();
+                let botName = this.botGenerator.generatorBotName(maxBotId);
+                let newBot = await this.bothRepository.save({name: botName});
+                let eavDataOfBot = {};
+                let attributeOfBot = [];
+
+                for (let i = 0; i < botEav.length; i++) {
+                    let attributeCode = Object.keys(botEav[i])[0];
+                    let attributeId = eavStorage[attributeCode];
+                    attributeOfBot.push(attributeId);
+                    if (eavDataOfBot.hasOwnProperty(attributeCode)){
+                        eavDataOfBot[attributeId][attributeCode].push(botEav[i][attributeCode]);
+                    } else {
+                        eavDataOfBot[attributeId] = {};
+                        eavDataOfBot[attributeId][attributeCode] = [botEav[i][attributeCode]];
+                    }
+                }
+
+                for (const attrId of attributeOfBot) {
+                    let valueBotEav = JSON.stringify(eavDataOfBot[attrId]);
+                    await this.botEavAttributeValueRepository.save(
+                        {
+                            attribute_id: attrId,
+                            entity_id: newBot.entity_id,
+                            value: valueBotEav
+                        })
+                }
                 console.log('end');
-              }
-
-            // await Promise.all(
-            //     dataEav.map(async (botEav) => {
-            //         console.log('start');
-            //         let maxBotId = await this.botResource.getMaxBotId();
-            //         let botName = this.botGenerator.generatorBotName(maxBotId);
-            //         let newBot = await this.bothRepository.save({name: botName});
-            //         let eavDataOfBot = {};
-            //         let attributeOfBot = [];
-            //     console.log('====================================');
-            //     console.log('ABCDEFGHIK');
-            //     console.log('====================================');
-                // for (let i = 0; i < botEav.length; i++) {
-                //     console.log('===============FOR LOOP=====================');
-                //     console.log('FOR LOOP');
-                //     console.log('===============FOR LOOP=====================');
-                //     let attributeCode = Object.keys(botEav[i])[0];
-                //     let attributeId = eavStorage[attributeCode];
-                //     attributeOfBot.push(attributeId);
-                //     if (eavDataOfBot.hasOwnProperty(attributeCode)){
-                //         eavDataOfBot[attributeId][attributeCode].push(botEav[i][attributeCode]);
-                //     } else {
-                //         eavDataOfBot[attributeId] = {};
-                //         eavDataOfBot[attributeId][attributeCode] = [botEav[i][attributeCode]];
-                //     }
-                // }
-
-                // console.log('===============eavDataOfBot=====================');
-                // console.log(eavDataOfBot);
-                // console.log('================eavDataOfBot====================');
-                // await Promise.all(attributeOfBot.map(async (attrId) => {
-                //     let valueBotEav = JSON.stringify(eavDataOfBot[attrId]);
-                //     let newAttrValue = await this.botEavAttributeValueRepository.save(
-                //         {
-                //             attribute_id: attrId,
-                //             entity_id: newBot.entity_id,
-                //             value: valueBotEav
-                //         })
-                // }));
-            //     console.log('end');
-            // }));
+            }
 
           } catch (error) {
             console.log('====================error================');
@@ -142,7 +123,12 @@ export class BotService {
         if (isAbnormal) {
             return isAbnormal;
         }
-        return eavStorage;
+        return "SUCCESS";
+    }
+
+    addMinTotalMatch()
+    {
+
     }
 
     generateBulkRandomOdd(oddData, overUnderData)
@@ -156,7 +142,13 @@ export class BotService {
                 let obj = {};
                 let flag = [...elem];
                 obj["bet_in_match"] = elememt;
-                flag.push(obj);
+
+                let objMinTotal = {};
+                objMinTotal["min_total_match"] = this.min_total_match_default;
+
+                let objMatchAmount = {};
+                objMatchAmount["match_amount"] = this.match_amount;
+                flag.push(obj, objMinTotal, objMatchAmount);
                 dataWithBetInMatch.push(flag);
             })
         });

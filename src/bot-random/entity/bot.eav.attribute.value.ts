@@ -20,10 +20,10 @@ export class BotEavAttributeValue {
     @Column({type: 'text' })
     value: string;
 
-    @ManyToOne(() => BotRandomEntity, (BotRandomEntity) => BotRandomEntity.botEavValues, { cascade: true })
+    @ManyToOne(() => BotRandomEntity, (BotRandomEntity) => BotRandomEntity.botEavValues, { onDelete: 'CASCADE' })
     @JoinColumn([{ name: 'entity_id', referencedColumnName: 'entity_id' }])
     bot: BotRandomEntity;
-    @ManyToOne(() => EavAttribute, (EavAttribute) => EavAttribute.botEavValues, { cascade: true })
+    @ManyToOne(() => EavAttribute, (EavAttribute) => EavAttribute.botEavValues, { onDelete: 'CASCADE' })
     @JoinColumn([{ name: 'attribute_id', referencedColumnName: 'attribute_id' }])
     eav: EavAttribute;
 }

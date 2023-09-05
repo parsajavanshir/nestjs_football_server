@@ -21,7 +21,7 @@ export class EavAttribute {
   @Column()
   type_input: string;
 
-  @ManyToOne(() => EavAttributeType, (EavAttributeType) => EavAttributeType.eavAttrs, { cascade: true })
+  @ManyToOne(() => EavAttributeType, (EavAttributeType) => EavAttributeType.eavAttrs, { onDelete: 'CASCADE' })
   @JoinColumn([{ name: 'type_id', referencedColumnName: 'entity_type_id' }])
   eavType: EavAttributeType;
 

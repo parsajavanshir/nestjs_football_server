@@ -19,10 +19,10 @@ export class MatchEavAttributeValue {
     @Column({type: 'text' })
     value: string;
 
-    @ManyToOne(() => NewMatchEntity, (NewMatchEntity) => NewMatchEntity.botEavValues, { cascade: true })
+    @ManyToOne(() => NewMatchEntity, (NewMatchEntity) => NewMatchEntity.botEavValues, { onDelete: 'CASCADE' })
     @JoinColumn([{ name: 'entity_id', referencedColumnName: 'entity_id' }])
     bot: NewMatchEntity;
-    @ManyToOne(() => EavAttribute, (EavAttribute) => EavAttribute.matchEavValues, { cascade: true })
+    @ManyToOne(() => EavAttribute, (EavAttribute) => EavAttribute.matchEavValues, { onDelete: 'CASCADE' })
     @JoinColumn([{ name: 'attribute_id', referencedColumnName: 'attribute_id' }])
     eav: EavAttribute;
 }

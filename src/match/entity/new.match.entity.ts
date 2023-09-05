@@ -52,7 +52,7 @@ export class NewMatchEntity {
     @Column()
     away_over_under: string;
 
-    @ManyToOne(() => LeagueEntity, (LeagueEntity) => LeagueEntity.newMatches, { cascade: true })
+    @ManyToOne(() => LeagueEntity, (LeagueEntity) => LeagueEntity.newMatches, { onDelete: 'CASCADE' })
     @JoinColumn([{ name: 'league_id', referencedColumnName: 'entity_id' }])
     league: LeagueEntity;
 

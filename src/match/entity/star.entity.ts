@@ -20,7 +20,7 @@ export class StarMatch {
   @Column('text')
   match_id: string;
 
-  @ManyToOne(() => UserEntity, (user) => user.stars, { cascade: true })
+  @ManyToOne(() => UserEntity, (user) => user.stars, { onDelete: 'CASCADE' })
   @JoinColumn([{ name: 'user_id', referencedColumnName: 'entity_id' }])
   users: UserEntity;
 }
