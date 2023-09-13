@@ -9,6 +9,7 @@ import {
 import {LeagueEntity} from "../../league/league.entity";
 import {BotEavAttributeValue} from "../../bot-random/entity/bot.eav.attribute.value";
 import {MatchEavAttributeValue} from "./match.eav.attribute.value";
+import { BotMatchItem } from 'src/bot-random/entity/bot.match.item';
 
 @Entity()
 
@@ -56,4 +57,11 @@ export class NewMatchEntity {
         { onDelete: 'CASCADE' },
     )
     botEavValues: BotEavAttributeValue[];
+
+    @OneToMany(
+        () => BotMatchItem,
+        (BotMatchItem) => BotMatchItem.match,
+        { onDelete: 'CASCADE' },
+      )
+      botMatchItem: BotMatchItem[];
 }

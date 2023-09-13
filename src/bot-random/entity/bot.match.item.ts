@@ -1,10 +1,10 @@
 import {Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn, Unique, Index} from 'typeorm';
 import { BotRandomEntity } from "./bot.entity";
-import { EavAttribute } from "../../eav/entity/eav.attribute";
+import { NewMatchEntity } from 'src/match/entity/new.match.entity';
 
 
 @Entity()
-@Unique(['entity_id', 'attribute_id'])
+@Unique(['match_id', 'bot_id'])
 export class BotMatchItem {
     @PrimaryGeneratedColumn()
     item_id: number;
@@ -20,7 +20,7 @@ export class BotMatchItem {
     @ManyToOne(() => BotRandomEntity, (BotRandomEntity) => BotRandomEntity.botMatchItem, { onDelete: 'CASCADE' })
     @JoinColumn([{ name: 'bot_id', referencedColumnName: 'entity_id' }])
     bot: BotRandomEntity;
-    @ManyToOne(() => EavAttribute, (EavAttribute) => EavAttribute.botEavValues, { onDelete: 'CASCADE' })
-    @JoinColumn([{ name: 'attribute_id', referencedColumnName: 'attribute_id' }])
-    eav: EavAttribute;
+    @ManyToOne(() => NewMatchEntity, (NewMatchEntity) => NewMatchEntity.botMatchItem, { onDelete: 'CASCADE' })
+    @JoinColumn([{ name: 'match_id', referencedColumnName: 'entity_id' }])
+    match: NewMatchEntity;
 }
