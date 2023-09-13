@@ -18,6 +18,7 @@ import { EavAttributeType } from './eav/entity/eav.attribute.type';
 import {NewMatchEntity} from "./match/entity/new.match.entity";
 import {MatchEavAttributeValue} from "./match/entity/match.eav.attribute.value";
 import {LeagueEntity} from "./league/league.entity";
+import { BotMatchItem } from './bot-random/entity/bot.match.item';
 import {EavModule} from "./eav/eav.module";
 
 @Module({
@@ -25,13 +26,13 @@ import {EavModule} from "./eav/eav.module";
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: 'localhost',
-      port: 3306,
+      port: 3309,
       username: 'root',
-      password: '',
+      password: 'admin123',
       database: 'soccer_fly',
       entities: [
           UserEntity, StarMatch, CrawlLiveContent, NewMatchEntity, MatchEavAttributeValue, LeagueEntity,
-        BotRandomEntity, EavAttribute, EavAttributeType, BotEavAttributeValue],
+        BotRandomEntity, EavAttribute, EavAttributeType, BotEavAttributeValue, BotMatchItem],
       synchronize: true,
     }),
     UserModule,
