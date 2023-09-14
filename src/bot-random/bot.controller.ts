@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Post, Get } from '@nestjs/common';
 import {BotService} from "./bot.service";
 import { CreateBotDTO } from './dto';
 
@@ -8,7 +8,17 @@ export class BotController {
 
     //curl -X POST -d 'token=huykuy99' http://localhost:3002/bot/create-bot
     @Post('create-bot')
-    saveStarMatchForUser(@Body() createBotDTO: CreateBotDTO) {
-        return this.botService.createSingleBot(createBotDTO);
+    createBotRandom(@Body() createBotDTO: CreateBotDTO) {
+        return this.botService.createBots(createBotDTO);
+    }
+
+    @Get('get-all-bot')
+    getAllBotRandom() {
+        return this.botService.getBotDataWithSingleAttribute();
+    }
+
+    @Post('generate-bot-match-single')
+    generateBotMatchSingleAttribute() {
+        return this.botService.generateBotMatchSingleAttribute();
     }
 }

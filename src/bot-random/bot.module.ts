@@ -8,6 +8,9 @@ import { BotResource } from './model/bot.resource';
 import { BotGenerator } from './model/bot.generator';
 import { BotBuilder } from './model/bot.builder';
 import { EavAttribute } from 'src/eav/entity/eav.attribute';
+import { BotCreator } from './model/bot.creator';
+import { BotGetter } from './model/bot.getter';
+import { BotRefactor } from './model/bot.refactor';
 
 @Module({
     imports: [
@@ -16,6 +19,6 @@ import { EavAttribute } from 'src/eav/entity/eav.attribute';
         TypeOrmModule.forFeature([EavAttribute]),
     ],
     controllers: [BotController],
-    providers: [BotService, BotResource, BotGenerator, BotBuilder]
+    providers: [BotService, BotResource, BotGenerator, BotBuilder, BotCreator, BotGetter, BotRefactor]
 })
 export class BotModule {}

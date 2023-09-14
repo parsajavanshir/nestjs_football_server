@@ -12,16 +12,18 @@ import {MatchEavAttributeValue} from "./match.eav.attribute.value";
 import { BotMatchItem } from 'src/bot-random/entity/bot.match.item';
 
 @Entity()
-
 export class NewMatchEntity {
     @PrimaryGeneratedColumn()
     entity_id: number;
 
-    @Column()
+    @Column({nullable: true})
     league_id: number;
 
     @Column({type: 'datetime'})
     datetime: string;
+
+    @Column()
+    result: number;
 
     @Column()
     home_name: string;
@@ -38,18 +40,12 @@ export class NewMatchEntity {
     @Column()
     odd: string;
 
-    @Column()
-    home_odd: string;
-
-    @Column()
-    away_odd: string;
-
-    @Column()
+    @Column({nullable: true})
     over_under: string;
 
-    @ManyToOne(() => LeagueEntity, (LeagueEntity) => LeagueEntity.newMatches, { onDelete: 'CASCADE' })
-    @JoinColumn([{ name: 'league_id', referencedColumnName: 'entity_id' }])
-    league: LeagueEntity;
+    // @ManyToOne(() => LeagueEntity, (LeagueEntity) => LeagueEntity.newMatches, { onDelete: 'CASCADE' })
+    // @JoinColumn([{ name: 'league_id', referencedColumnName: 'entity_id' }])
+    // league: LeagueEntity;
 
     @OneToMany(
         () => MatchEavAttributeValue,

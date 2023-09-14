@@ -12,12 +12,12 @@ export class LeagueEntity {
     entity_id: number;
 
     @Column({ unique: true })
-    name: number;
+    name: string;
 
-    @OneToMany(
-        () => NewMatchEntity,
-        (NewMatchEntity) => NewMatchEntity.league,
-        { onDelete: 'CASCADE' },
-    )
-    newMatches: NewMatchEntity[];
+    // @OneToMany(
+    //     () => NewMatchEntity,
+    //     (NewMatchEntity) => NewMatchEntity.league,
+    //     { onDelete: 'CASCADE' },
+    // )
+    // newMatches: NewMatchEntity[];
 }
