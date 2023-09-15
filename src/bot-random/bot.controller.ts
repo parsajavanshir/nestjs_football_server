@@ -17,7 +17,7 @@ export class BotController {
         return this.botService.getBotDataWithSingleAttribute();
     }
 
-    @Post('generate-bot-match-single')
+    @Post('generate-random-bot-match-single-bet')
     generateBotMatchSingleAttribute() {
         return this.botService.generateBotMatchSingleAttribute();
     }

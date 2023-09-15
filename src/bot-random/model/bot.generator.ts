@@ -1,4 +1,6 @@
 import { Injectable } from '@nestjs/common';
+import { BotGetter } from './bot.getter';
+import { BotPreparator } from './bot.preparator';
 
 @Injectable()
 export class BotGenerator {
@@ -15,10 +17,17 @@ export class BotGenerator {
     match_amount = 4;
     min_total_match_default =  6;
 
+    constructor(
+        private botGetter: BotGetter,
+        private botPreparator: BotPreparator,
+      ) { }
 
-    generateBotMatchSingleAttribute()
+    async generateBotMatchSingleAttribute()
     {
-        return [];
+        let dataBotEav = await this.botGetter.getBotDataWithSingleAttribute();
+        
+        let matchData = await this.botPreparator.prepareDataMatchRandomBySql(dataBotEav[0]["botEavValues"]);
+        return matchData;
     }
     /**
      * generate bot name

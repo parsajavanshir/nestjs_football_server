@@ -8,9 +8,11 @@ export class BotRefactor {
     refactorBotDataEavValue(data)
     {
         data.forEach(bot => {
-            let botEavValues = [];
+            let botEavValues = {};
             bot["botEavValues"].forEach(eavValue => {
-                botEavValues.push(JSON.parse(eavValue["value"]));
+                let valueObj = JSON.parse(eavValue["value"]);
+                let firstKey = Object.keys(valueObj)[0];
+                botEavValues[firstKey] = valueObj[firstKey];
             })
 
             bot["botEavValues"] = botEavValues;
