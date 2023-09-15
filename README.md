@@ -69,7 +69,7 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 - Twitter - [@nestframework](https://twitter.com/nestframework)
 
 ## License
-
+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
 Nest is [MIT licensed](LICENSE).
 
 How to migrate: 
