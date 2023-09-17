@@ -2,7 +2,7 @@ import { MigrationInterface, QueryRunner } from "typeorm"
 import {EavAttributeType} from "../eav/entity/eav.attribute.type";
 import {EavAttribute} from "../eav/entity/eav.attribute";
 
-export class EavAttributeInit1691750293179 implements MigrationInterface {
+export class EavAttributeInit1694790834855 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         const eavTypeRepo = queryRunner.connection.getRepository(EavAttributeType);

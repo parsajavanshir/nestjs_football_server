@@ -1,7 +1,7 @@
 export = {
   host: 'localhost',
   type: 'mysql',
-  port: '3309',
+  port: '3306',
   username: 'root',
   password: 'admin123',
   database: 'soccer_fly',

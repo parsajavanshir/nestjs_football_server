@@ -1,9 +1,9 @@
-import {Entity, Column, PrimaryGeneratedColumn, OneToMany} from 'typeorm';
-import {BotEavAttributeValue} from "./bot.eav.attribute.value";
-import { BotMatchItem } from './bot.match.item';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import { BotEavAttributeValue } from './bot.eav.attribute.value';
+import { BotListItem } from './bot.list.item';
+import { BotListEntity } from './bot.list.entity';
 
 @Entity()
-
 export class BotRandomEntity {
   @PrimaryGeneratedColumn()
   entity_id: number;
@@ -12,15 +12,14 @@ export class BotRandomEntity {
   name: string;
 
   @OneToMany(
-      () => BotEavAttributeValue,
-      (BotEavAttributeValue) => BotEavAttributeValue.bot,
-      { onDelete: 'CASCADE' },
-  )
-  botEavValues: BotEavAttributeValue[];
-  @OneToMany(
-    () => BotMatchItem,
-    (BotMatchItem) => BotMatchItem.bot,
+    () => BotEavAttributeValue,
+    (BotEavAttributeValue) => BotEavAttributeValue.bot,
     { onDelete: 'CASCADE' },
   )
-  botMatchItem: BotMatchItem[];
+  botEavValues: BotEavAttributeValue[];
+
+  @OneToMany(() => BotListEntity, (BotListEntity) => BotListEntity.bot, {
+    onDelete: 'CASCADE',
+  })
+  botList: BotListEntity[];
 }

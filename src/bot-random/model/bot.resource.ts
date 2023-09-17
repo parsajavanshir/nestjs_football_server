@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BotRandomEntity } from '../entity/bot.entity';
-import { EavAttribute } from 'src/eav/entity/eav.attribute';
+import { EavAttribute } from '../../eav/entity/eav.attribute';
 import { BotEavAttributeValue } from '../entity/bot.eav.attribute.value';
 import { EavAttributeValueDTO } from '../dto';
 

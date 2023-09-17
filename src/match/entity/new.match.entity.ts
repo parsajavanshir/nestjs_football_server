@@ -4,14 +4,16 @@ import {
     PrimaryGeneratedColumn,
     JoinColumn,
     ManyToOne,
+    Unique,
     OneToMany
 } from 'typeorm';
 import {LeagueEntity} from "../../league/league.entity";
 import {BotEavAttributeValue} from "../../bot-random/entity/bot.eav.attribute.value";
 import {MatchEavAttributeValue} from "./match.eav.attribute.value";
-import { BotMatchItem } from 'src/bot-random/entity/bot.match.item';
+import { BotListItem } from '../../bot-random/entity/bot.list.item';
 
 @Entity()
+@Unique(['home_name', 'away_name', 'date'])
 export class NewMatchEntity {
     @PrimaryGeneratedColumn()
     entity_id: number;
@@ -21,6 +23,9 @@ export class NewMatchEntity {
 
     @Column({type: 'datetime'})
     datetime: string;
+
+    @Column({nullable: true})
+    date: string;
 
     @Column()
     result: number;
@@ -55,9 +60,9 @@ export class NewMatchEntity {
     botEavValues: BotEavAttributeValue[];
 
     @OneToMany(
-        () => BotMatchItem,
-        (BotMatchItem) => BotMatchItem.match,
+        () => BotListItem,
+        (BotListItem) => BotListItem.match,
         { onDelete: 'CASCADE' },
       )
-      botMatchItem: BotMatchItem[];
+      BotListItem: BotListItem[];
 }

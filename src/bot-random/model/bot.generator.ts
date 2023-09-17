@@ -26,7 +26,9 @@ export class BotGenerator {
     {
         let dataBotEav = await this.botGetter.getBotDataWithSingleAttribute();
         
-        let matchData = await this.botPreparator.prepareDataMatchRandomBySql(dataBotEav[0]["botEavValues"]);
+        let botId = dataBotEav[1]["entity_id"];
+        let matchData = await this.botPreparator.prepareDataMatchRandomBySql(botId, dataBotEav[1]["botEavValues"]);
+
         return matchData;
     }
     /**

@@ -1,7 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { DataSource, SelectQueryBuilder } from 'typeorm';
-import { NewMatchEntity } from 'src/match/entity/new.match.entity';
+import { NewMatchEntity } from '../../match/entity/new.match.entity';
+import { BotListEntity } from '../entity/bot.list.entity';
+import { BotListItem } from '../entity/bot.list.item';
 
 @Injectable()
 export class BotPreparator {
@@ -20,16 +22,11 @@ export class BotPreparator {
     /**
      * prepare query
      */
-    async prepareDataMatchRandomBySql(botEavValues: object)
+    async prepareDataMatchRandomBySql(botId: number, botEavValues: object)
     {
-        let matchData =  await (await this.prepareQueryForMatchWithBotEqualCondition(botEavValues))
-                        // .orderBy('RANDOM()')
-                        .take(botEavValues[this.MATCH_AMOUNT])
-                        // .getQuery();
+        // remove match entity id already in the bot
+        let matchData =  await (await this.prepareQueryForMatchWithBotEqualCondition(botId, botEavValues))
                         .getMany();
-        console.log('====================================');
-        console.log(matchData);
-        console.log('====================================');
         if (matchData.length < botEavValues[this.MIN_TOTAL_MATCH]) {
             return [];
         }
@@ -37,15 +34,23 @@ export class BotPreparator {
     }
 
     /**
-     * prepare query
+     * prepare query remove match entity id already in the bot
      */
-    async prepareQueryForMatchWithBotEqualCondition(botEavValues: object)
+    async prepareQueryForMatchWithBotEqualCondition(botId: number, botEavValues: object)
     {
+        let allMatchOfBot = this.dataSource
+        .createQueryBuilder(BotListItem, "botListItem")
+        .select(['botListItem.match_id'])
+        .innerJoin(BotListEntity, "botListEntity", "botListEntity.list_id = botListItem.list_id")
+        .where("botListEntity.bot_id = " + botId);
         let matchData = this.dataSource
         .createQueryBuilder(NewMatchEntity, "match")
-        .select(['match']);
+        .select(['match.entity_id', 'match.odd', 'match.over_under'])
+        .leftJoin("(" + allMatchOfBot.getQuery() + ")", "allMatchOfBot", "allMatchOfBot.botListItem_match_id = match.entity_id")
+        .where("allMatchOfBot.botListItem_match_id IS NULL");
+
         matchData = await this.prepareConditionKey(botEavValues, matchData);
-        // return matchData.getMany();
+
         return matchData;
     }
 
@@ -55,10 +60,10 @@ export class BotPreparator {
         let self = this;
         Object.keys(botEavValues).forEach(function(key) {
             if (self.WHERE_CLAUSE.includes(key) && !isSetWhereClause) {
-                matchData.where("match." + key + " IN (:...values)", { values: botEavValues[key]});
+                matchData.andWhere("match." + key + " IN (:...values)", { values: botEavValues[key]});
                 isSetWhereClause = true;
             } else if (self.WHERE_CLAUSE.includes(key) && isSetWhereClause) {
-                // matchData.andWhere("match." + key + " IN (:...values)", { values: botEavValues[key]});
+                matchData.andWhere("match." + key + " IN (:...values)", { values: botEavValues[key]});
             }
         });
 

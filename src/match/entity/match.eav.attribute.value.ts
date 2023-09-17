@@ -1,7 +1,7 @@
 import {Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn, Unique, Index} from 'typeorm';
 import {NewMatchEntity} from "./new.match.entity";
 import {EavAttribute} from "../../eav/entity/eav.attribute";
-import { BotRandomEntity } from 'src/bot-random/entity/bot.entity';
+import { BotRandomEntity } from '../../bot-random/entity/bot.entity';
 
 @Entity()
 @Unique(['entity_id', 'bot_id', 'attribute_id'])

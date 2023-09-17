@@ -7,7 +7,7 @@ import {BotService} from "./bot.service";
 import { BotResource } from './model/bot.resource';
 import { BotGenerator } from './model/bot.generator';
 import { BotBuilder } from './model/bot.builder';
-import { EavAttribute } from 'src/eav/entity/eav.attribute';
+import { EavAttribute } from '../eav/entity/eav.attribute';
 import { BotCreator } from './model/bot.creator';
 import { BotGetter } from './model/bot.getter';
 import { BotRefactor } from './model/bot.refactor';

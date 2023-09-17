@@ -9,18 +9,20 @@ import {EavAttribute} from "./eav/entity/eav.attribute";
 import {EavAttributeType} from "./eav/entity/eav.attribute.type";
 import {MatchEavAttributeValue} from "./match/entity/match.eav.attribute.value";
 import {LeagueEntity} from "./league/league.entity";
+import { BotListItem } from "./bot-random/entity/bot.list.item";
+import { BotListEntity } from "./bot-random/entity/bot.list.entity";
 
 export const AppDataSource = new DataSource({
     type: "mysql",
     host: "localhost",
     port: 3306,
     username: "root",
-    password: "",
+    password: "admin123",
     database: "soccer_fly",
     synchronize: true,
     logging: true,
     entities: [
         UserEntity, StarMatch, CrawlLiveContent, NewMatchEntity, MatchEavAttributeValue, LeagueEntity,
-        BotRandomEntity, EavAttribute, EavAttributeType, BotEavAttributeValue],
+        BotRandomEntity, EavAttribute, EavAttributeType, BotEavAttributeValue, BotListItem, BotListEntity],
     migrations: ['./src/migration/*.ts']
 })
