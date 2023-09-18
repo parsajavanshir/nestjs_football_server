@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { BotGetter } from './bot.getter';
 import { BotPreparator } from './bot.preparator';
+import { BotChecker } from './bot.checker';
+import { BotResource } from './bot.resource';
 
 @Injectable()
 export class BotGenerator {
@@ -20,17 +22,120 @@ export class BotGenerator {
     constructor(
         private botGetter: BotGetter,
         private botPreparator: BotPreparator,
+        private botChecker: BotChecker,
+        private botResource: BotResource,
       ) { }
 
     async generateBotMatchSingleAttribute()
     {
         let dataBotEav = await this.botGetter.getBotDataWithSingleAttribute();
-        
-        let botId = dataBotEav[1]["entity_id"];
-        let matchData = await this.botPreparator.prepareDataMatchRandomBySql(botId, dataBotEav[1]["botEavValues"]);
+        let matchForBotList: Array<any>, matchData: Array<any>, botId: number;
 
-        return matchData;
+        for (const index in dataBotEav) {
+            matchForBotList = [];
+            matchData = [];
+            botId = dataBotEav[index]["entity_id"];
+            // console.log('===============botEavValues=====================');
+            // console.log(dataBotEav[index]);
+            // console.log('================botEavValues====================');
+            matchData = await this.botPreparator.prepareDataMatchRandomBySql(botId, dataBotEav[index]["botEavValues"]);
+            matchForBotList = this.generateRandomMatch(matchData, dataBotEav[index]["botEavValues"]["match_amount"][0]);
+
+            if (matchForBotList.length > 0) {
+                await this.botResource.insertMatchForBotList(botId, matchForBotList);
+            }
+            // console.log('====================================');
+            // console.log(matchForBotList);
+            // console.log('====================================');
+        }
+
+        return matchForBotList;
     }
+
+    generateRandomMatch(matchs, match_count) {
+        let maxFailCount = 1000;
+        let failCount = 0;
+        let streak;
+        let totalStreak = [];
+        let dataRandom;
+        while(failCount < maxFailCount) {
+            dataRandom = this.generateRandom(matchs, match_count);
+            streak = dataRandom[0];
+            matchs = dataRandom[1];
+            if (streak.length > 0 && streak.length === match_count) {
+                totalStreak.push(streak);
+                streak = [];
+            }
+            failCount++;
+        }
+        // console.log(totalStreak);
+        return totalStreak;
+    }
+
+    generateRandom(arr, maxCount) {
+        let arrBackup = [...arr];
+        let randomIndex;
+        let canUseThisArr = false;
+        let count = 0;
+        let arrStreak = [];
+    
+        if (arr.length < maxCount) {
+            maxCount = arr.length;
+        }
+    
+        if (arr.length === maxCount) {
+            canUseThisArr = this.botChecker.checkValidTime(arr);
+            if (!canUseThisArr) {
+                return [[], arr];
+            }
+        }
+    
+        let maxFailCount = 1000;
+        let failCount = 0;
+    
+        //if first value chosen is too large. we need to random again
+        while (count < maxCount && failCount < maxFailCount) {
+            randomIndex = Math.floor(Math.random() * arrBackup.length);
+            if (arrStreak.length === 0) {
+                arrStreak.push(arrBackup[randomIndex]);
+                arrBackup.splice(randomIndex, 1);
+                count++;
+                continue;
+            } else if (arrStreak.length === 1) {
+                if (this.botChecker.checkSubDateValueAbs(arrBackup[randomIndex].datetime, arrStreak[0].datetime)) {
+                    if (arrBackup[randomIndex].datetime > arrStreak[0].datetime) {
+                        arrStreak.push(arrBackup[randomIndex]);
+                    } else {
+                        arrStreak.unshift(arrBackup[randomIndex]);
+                    }
+                    arrBackup.splice(randomIndex, 1);
+                    this.botPreparator.prepareSortStreakMinToMax(arrStreak);
+                    count++;
+                    continue;
+                }
+            } else {
+                let lastIndex = arrStreak.length - 1;
+                if (this.botChecker.checkSubDateValue(arrStreak[0].datetime, arrBackup[randomIndex].datetime)) {
+                    arrStreak.unshift(arrBackup[randomIndex]);
+                    arrBackup.splice(randomIndex, 1);
+                    count++;
+                    continue;
+                } else if (this.botChecker.checkSubDateValue(arrBackup[randomIndex].datetime, arrStreak[lastIndex].datetime)) {
+                    arrStreak.push(arrBackup[randomIndex]);
+                    arrBackup.splice(randomIndex, 1);
+                    count++;
+                    continue;
+                }
+            }
+            failCount++;
+        }
+    
+        if (failCount === maxFailCount || arrStreak.length < maxCount) {
+            return [[], arr];
+        }
+        return [arrStreak, arrBackup];
+    }
+
     /**
      * generate bot name
      */

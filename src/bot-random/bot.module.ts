@@ -12,14 +12,19 @@ import { BotCreator } from './model/bot.creator';
 import { BotGetter } from './model/bot.getter';
 import { BotRefactor } from './model/bot.refactor';
 import { BotPreparator } from './model/bot.preparator';
+import { BotChecker } from './model/bot.checker';
+import { BotListEntity } from './entity/bot.list.entity';
+import { BotListItem } from './entity/bot.list.item';
 
 @Module({
     imports: [
         TypeOrmModule.forFeature([BotRandomEntity]),
         TypeOrmModule.forFeature([BotEavAttributeValue]),
         TypeOrmModule.forFeature([EavAttribute]),
+        TypeOrmModule.forFeature([BotListEntity]),
+        TypeOrmModule.forFeature([BotListItem]),
     ],
     controllers: [BotController],
-    providers: [BotService, BotResource, BotGenerator, BotBuilder, BotCreator, BotGetter, BotRefactor, BotPreparator]
+    providers: [BotService, BotResource, BotGenerator, BotBuilder, BotCreator, BotGetter, BotRefactor, BotPreparator, BotChecker]
 })
 export class BotModule {}

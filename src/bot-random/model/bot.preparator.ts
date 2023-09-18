@@ -30,6 +30,7 @@ export class BotPreparator {
         if (matchData.length < botEavValues[this.MIN_TOTAL_MATCH]) {
             return [];
         }
+
         return matchData;
     }
 
@@ -45,7 +46,7 @@ export class BotPreparator {
         .where("botListEntity.bot_id = " + botId);
         let matchData = this.dataSource
         .createQueryBuilder(NewMatchEntity, "match")
-        .select(['match.entity_id', 'match.odd', 'match.over_under'])
+        .select(['match.entity_id', 'match.odd', 'match.over_under', 'match.datetime'])
         .leftJoin("(" + allMatchOfBot.getQuery() + ")", "allMatchOfBot", "allMatchOfBot.botListItem_match_id = match.entity_id")
         .where("allMatchOfBot.botListItem_match_id IS NULL");
 
@@ -68,5 +69,13 @@ export class BotPreparator {
         });
 
         return matchData;
+    }
+
+    prepareSortStreakMinToMax(streak) {
+        streak.sort(function (a, b) {
+            return +new Date(a.datetime) - +new Date(b.datetime);
+        });
+    
+        return streak;
     }
 }

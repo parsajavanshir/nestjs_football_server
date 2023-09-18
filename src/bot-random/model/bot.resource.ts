@@ -5,6 +5,8 @@ import { BotRandomEntity } from '../entity/bot.entity';
 import { EavAttribute } from '../../eav/entity/eav.attribute';
 import { BotEavAttributeValue } from '../entity/bot.eav.attribute.value';
 import { EavAttributeValueDTO } from '../dto';
+import { BotListEntity } from '../entity/bot.list.entity';
+import { BotListItem } from '../entity/bot.list.item';
 
 @Injectable()
 export class BotResource {
@@ -16,7 +18,37 @@ export class BotResource {
         private eavAttributeRepository: Repository<EavAttribute>,
         @InjectRepository(BotEavAttributeValue)
         private botEavAttributeValueRepository: Repository<BotEavAttributeValue>,
+        @InjectRepository(BotListEntity)
+        private botListEntityRepository: Repository<BotListEntity>,
+        @InjectRepository(BotListItem)
+        private botListItemRepository: Repository<BotListItem>,
     ) {}
+
+    async insertMatchForBotList(botId: number, matchForBotList: Array<any>) : Promise<any>
+    {
+        try {
+          console.log(botId);
+          console.log(matchForBotList);
+          console.log('------------****************');
+            for (const index in matchForBotList) {
+              let newList = await this.botListEntityRepository.save({bot_id: botId});
+              let listId = newList.list_id;
+              for (const idx in matchForBotList[index]) {
+                await this.botListItemRepository.save(
+                  {
+                    match_id: matchForBotList[index][idx]["entity_id"],
+                    list_id: listId
+                  }
+                )
+                // console.log('====================================');
+                // console.log(matchForBotList[index][idx]);
+                // console.log('====================================');
+              }
+            }
+          } catch (error) {
+            return false;
+          }
+    }
 
     async saveNewBotEavValueRecord(eavAttributeValueDTO: EavAttributeValueDTO) : Promise<any>
     {
