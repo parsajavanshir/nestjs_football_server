@@ -11,6 +11,9 @@ export class BotRandomEntity {
   @Column({ unique: true })
   name: string;
 
+  @Column({ default: 0 })
+  crawled_today: number;
+
   @OneToMany(
     () => BotEavAttributeValue,
     (BotEavAttributeValue) => BotEavAttributeValue.bot,

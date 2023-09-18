@@ -47,12 +47,15 @@ export class BotCreator{
                 let newBot = await this.bothRepository.save({name: botName});
                 let eavDataOfBot = {};
                 let attributeOfBot = [];
-
                 for (let i = 0; i < botEav.length; i++) {
                     let attributeCode = Object.keys(botEav[i])[0];
                     let attributeId = eavStorage[attributeCode];
-                    attributeOfBot.push(attributeId);
-                    if (eavDataOfBot.hasOwnProperty(attributeCode)){
+
+                    if (!attributeOfBot.includes(attributeId)) {
+                        attributeOfBot.push(attributeId);
+                    }
+
+                    if (eavDataOfBot.hasOwnProperty(attributeId)){
                         eavDataOfBot[attributeId][attributeCode].push(botEav[i][attributeCode]);
                     } else {
                         eavDataOfBot[attributeId] = {};
@@ -62,12 +65,12 @@ export class BotCreator{
 
                 for (const attrId of attributeOfBot) {
                     let valueBotEav = JSON.stringify(eavDataOfBot[attrId]);
-                    await this.botEavAttributeValueRepository.save(
-                        {
-                            attribute_id: attrId,
-                            entity_id: newBot.entity_id,
-                            value: valueBotEav
-                        })
+                    let eavValueObj = {
+                        attribute_id: attrId,
+                        entity_id: newBot.entity_id,
+                        value: valueBotEav
+                    };
+                    await this.botEavAttributeValueRepository.save(eavValueObj);
                 }
             }
 

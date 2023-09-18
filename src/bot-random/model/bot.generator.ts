@@ -8,7 +8,7 @@ import { BotResource } from './bot.resource';
 export class BotGenerator {
     odd_range = 0;
     start_over_under_value = 3.75;
-    over_under_range = 3.75;
+    over_under_range = 4.5;
     all_odd = true;
     league_name = [];
     bettingObj = [
@@ -35,18 +35,12 @@ export class BotGenerator {
             matchForBotList = [];
             matchData = [];
             botId = dataBotEav[index]["entity_id"];
-            // console.log('===============botEavValues=====================');
-            // console.log(dataBotEav[index]);
-            // console.log('================botEavValues====================');
             matchData = await this.botPreparator.prepareDataMatchRandomBySql(botId, dataBotEav[index]["botEavValues"]);
             matchForBotList = this.generateRandomMatch(matchData, dataBotEav[index]["botEavValues"]["match_amount"][0]);
 
             if (matchForBotList.length > 0) {
                 await this.botResource.insertMatchForBotList(botId, matchForBotList);
             }
-            // console.log('====================================');
-            // console.log(matchForBotList);
-            // console.log('====================================');
         }
 
         return matchForBotList;

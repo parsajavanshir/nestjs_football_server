@@ -27,9 +27,6 @@ export class BotResource {
     async insertMatchForBotList(botId: number, matchForBotList: Array<any>) : Promise<any>
     {
         try {
-          console.log(botId);
-          console.log(matchForBotList);
-          console.log('------------****************');
             for (const index in matchForBotList) {
               let newList = await this.botListEntityRepository.save({bot_id: botId});
               let listId = newList.list_id;
@@ -40,9 +37,6 @@ export class BotResource {
                     list_id: listId
                   }
                 )
-                // console.log('====================================');
-                // console.log(matchForBotList[index][idx]);
-                // console.log('====================================');
               }
             }
           } catch (error) {
@@ -82,9 +76,6 @@ export class BotResource {
     {
         try {
             const botData = await this.bothRepository.count();
-            console.log('========================botData============');
-            console.log(botData);
-            console.log('========================botData============');
             if (!botData) {
               return 1;
             }
