@@ -3,6 +3,9 @@ import { BotGetter } from './bot.getter';
 import { BotPreparator } from './bot.preparator';
 import { BotChecker } from './bot.checker';
 import { BotResource } from './bot.resource';
+import { BotRandomEntity } from '../entity/bot.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class BotGenerator {
@@ -24,6 +27,8 @@ export class BotGenerator {
         private botPreparator: BotPreparator,
         private botChecker: BotChecker,
         private botResource: BotResource,
+        @InjectRepository(BotRandomEntity)
+        private botRepository: Repository<BotRandomEntity>,
       ) { }
 
     async generateBotMatchSingleAttribute()
@@ -37,7 +42,8 @@ export class BotGenerator {
             botId = dataBotEav[index]["entity_id"];
             matchData = await this.botPreparator.prepareDataMatchRandomBySql(botId, dataBotEav[index]["botEavValues"]);
             matchForBotList = this.generateRandomMatch(matchData, dataBotEav[index]["botEavValues"]["match_amount"][0]);
-
+            // update crawled
+            await this.botRepository.update(botId, {crawled_today: 1});
             if (matchForBotList.length > 0) {
                 await this.botResource.insertMatchForBotList(botId, matchForBotList);
             }

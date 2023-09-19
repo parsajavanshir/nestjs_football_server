@@ -75,3 +75,22 @@ Nest is [MIT licensed](LICENSE).
 How to migrate: 
 npm run typeorm migration:create -n ./src/migration/BotEavAttribute
 npm run typeorm migration:run -- -d ./src/data-source.ts
+
+
+default range
+odd_range = 1.5;
+start_over_under_value = 2;
+over_under_range = 3.5;
+all_odd = true;
+league_name = [];
+bettingObj = [
+    'min_total_match', 'odd', 'over_under'
+]
+min_total_match_range = {min: 5,max: 10};
+bet_in_match = ['over', 'under', 'favorite', 'underdog'];
+match_amount = 4;
+min_total_match_default =  6;
+
+odd_range = 0;
+start_over_under_value = 3.75;
+over_under_range = 4.5;

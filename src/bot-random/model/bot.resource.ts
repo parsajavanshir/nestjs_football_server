@@ -13,7 +13,7 @@ export class BotResource {
     
     constructor(
         @InjectRepository(BotRandomEntity)
-        private bothRepository: Repository<BotRandomEntity>,
+        private botRepository: Repository<BotRandomEntity>,
         @InjectRepository(EavAttribute)
         private eavAttributeRepository: Repository<EavAttribute>,
         @InjectRepository(BotEavAttributeValue)
@@ -75,7 +75,7 @@ export class BotResource {
     async getMaxBotId() : Promise<any>
     {
         try {
-            const botData = await this.bothRepository.count();
+            const botData = await this.botRepository.count();
             if (!botData) {
               return 1;
             }

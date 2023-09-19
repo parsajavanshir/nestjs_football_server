@@ -24,18 +24,11 @@ export class BotListItem {
   @Index()
   list_id: number;
 
-  @ManyToOne(
-    () => BotListEntity,
-    (BotListEntity) => BotListEntity.items,
-    { onDelete: 'CASCADE' },
-  )
+  @ManyToOne(() => BotListEntity, (BotListEntity) => BotListEntity.items, { onDelete: 'CASCADE' })
   @JoinColumn([{ name: 'list_id', referencedColumnName: 'list_id' }])
   botList: BotListEntity;
-  @ManyToOne(
-    () => NewMatchEntity,
-    (NewMatchEntity) => NewMatchEntity.BotListItem,
-    { onDelete: 'CASCADE' },
-  )
+
+  @ManyToOne(() => NewMatchEntity, (NewMatchEntity) => NewMatchEntity.BotListItem, { onDelete: 'CASCADE' })
   @JoinColumn([{ name: 'match_id', referencedColumnName: 'entity_id' }])
   match: NewMatchEntity;
 }
