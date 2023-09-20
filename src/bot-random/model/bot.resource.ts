@@ -179,10 +179,6 @@ export class BotResource {
     {
         try {
           let UIData = await this.botRepository.find({
-              // where: {
-              //     crawled_today: LessThan(this.max_crawl),
-              //     is_locking: 0,
-              // },
               relations: {
                   botEavValues: true,
                   botList: {
@@ -193,11 +189,7 @@ export class BotResource {
                     }
                   }
               },
-              // order: {
-              //     crawled_today: "ASC",
-              //     entity_id: "ASC",
-              // },
-              take: 100,
+              take: 300,
               skip: 0,
           });
             return UIData;
