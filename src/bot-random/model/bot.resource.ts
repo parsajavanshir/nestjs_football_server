@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { Repository } from 'typeorm';
-import { InjectRepository } from '@nestjs/typeorm';
+import { DataSource, Repository } from 'typeorm';
+import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { BotRandomEntity } from '../entity/bot.entity';
 import { EavAttribute } from '../../eav/entity/eav.attribute';
 import { BotEavAttributeValue } from '../entity/bot.eav.attribute.value';
@@ -22,6 +22,7 @@ export class BotResource {
         private botListEntityRepository: Repository<BotListEntity>,
         @InjectRepository(BotListItem)
         private botListItemRepository: Repository<BotListItem>,
+        @InjectDataSource() private dataSource: DataSource,
     ) {}
 
     async insertMatchForBotList(botId: number, matchForBotList: Array<any>) : Promise<any>
@@ -97,6 +98,50 @@ export class BotResource {
               return false;
             }
             return attributeEntity.attribute_id;
+          } catch (error) {
+            return false;
+          }
+    }
+
+    async resetCrawledToday() : Promise<any>
+    {
+        try {
+            await this.dataSource
+                .createQueryBuilder(BotRandomEntity, "botRandom")
+                .update()
+                .set({ crawled_today: 0})
+                .execute();
+            return true;
+          } catch (error) {
+            return false;
+          }
+    }
+
+    async lockBotDataInQueue(botIds: Array <any>) : Promise<any>
+    {
+        try {
+          await this.dataSource
+              .createQueryBuilder(BotRandomEntity, "botRandom")
+              .update()
+              .set({ is_locking: 1})
+              .where("entity_id IN (:...values)", { values: botIds})
+              .execute();
+            return true;
+          } catch (error) {
+            return false;
+          }
+    }
+
+    async unlockBotDataInQueue(botIds: Array <any>) : Promise<any>
+    {
+        try {
+          await this.dataSource
+              .createQueryBuilder(BotRandomEntity, "botRandom")
+              .update()
+              .set({ is_locking: 0})
+              .where("entity_id IN (:...values)", { values: botIds})
+              .execute();
+            return true;
           } catch (error) {
             return false;
           }

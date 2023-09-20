@@ -3,6 +3,7 @@ import { CreateBotDTO } from './dto';
 import { BotCreator } from './model/bot.creator';
 import { BotGetter } from './model/bot.getter';
 import { BotGenerator } from './model/bot.generator';
+import { BotResource } from './model/bot.resource';
 
 @Injectable()
 export class BotService {
@@ -10,6 +11,7 @@ export class BotService {
         public botCreator: BotCreator,
         public botGetter: BotGetter,
         public botGenerator: BotGenerator,
+        public botResource: BotResource,
     ) {}
 
     // save star match
@@ -30,6 +32,11 @@ export class BotService {
 
     async generateBotMatchSingleAttribute() {
         const result = await this.botGenerator.generateBotMatchSingleAttribute();
+        return result;
+    }
+
+    async resetBotForNewDay() {
+        const result = await this.botResource.resetCrawledToday();
         return result;
     }
 }

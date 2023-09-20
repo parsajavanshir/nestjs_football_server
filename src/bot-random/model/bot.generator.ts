@@ -34,20 +34,32 @@ export class BotGenerator {
     async generateBotMatchSingleAttribute()
     {
         let dataBotEav = await this.botGetter.getBotDataWithSingleAttribute();
-        let matchForBotList: Array<any>, matchData: Array<any>, botId: number;
+        if (dataBotEav.length == 0) {
+            return [];
+        }
+        let matchForBotList: Array<any>, 
+            matchData: Array<any>, 
+            botId: number, 
+            countCrawledToday: number;
+        let botIds = [];
 
         for (const index in dataBotEav) {
             matchForBotList = [];
             matchData = [];
             botId = dataBotEav[index]["entity_id"];
+            botIds.push(botId);
+            countCrawledToday = dataBotEav[index]["crawled_today"] + 1;
             matchData = await this.botPreparator.prepareDataMatchRandomBySql(botId, dataBotEav[index]["botEavValues"]);
             matchForBotList = this.generateRandomMatch(matchData, dataBotEav[index]["botEavValues"]["match_amount"][0]);
             // update crawled
-            await this.botRepository.update(botId, {crawled_today: 1});
+            await this.botRepository.update(botId, {crawled_today: countCrawledToday});
             if (matchForBotList.length > 0) {
                 await this.botResource.insertMatchForBotList(botId, matchForBotList);
             }
         }
+
+        //unlock
+        await this.botResource.unlockBotDataInQueue(botIds);
 
         return matchForBotList;
     }

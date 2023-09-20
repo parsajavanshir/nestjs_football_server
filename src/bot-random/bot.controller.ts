@@ -21,4 +21,10 @@ export class BotController {
     generateBotMatchSingleAttribute() {
         return this.botService.generateBotMatchSingleAttribute();
     }
+
+    @Post('reset-bot-for-new-day')
+    resetBotForNewDay() {
+        // set crawled_today = 0
+        return this.botService.resetBotForNewDay();
+    }
 }

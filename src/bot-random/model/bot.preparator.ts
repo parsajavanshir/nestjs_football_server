@@ -48,7 +48,8 @@ export class BotPreparator {
         .createQueryBuilder(NewMatchEntity, "match")
         .select(['match.entity_id', 'match.odd', 'match.over_under', 'match.datetime'])
         .leftJoin("(" + allMatchOfBot.getQuery() + ")", "allMatchOfBot", "allMatchOfBot.botListItem_match_id = match.entity_id")
-        .where("allMatchOfBot.botListItem_match_id IS NULL");
+        .where("allMatchOfBot.botListItem_match_id IS NULL")
+        .andWhere("match.result = '2'");
 
         matchData = await this.prepareConditionKey(botEavValues, matchData);
 
