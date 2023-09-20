@@ -27,4 +27,16 @@ export class BotController {
         // set crawled_today = 0
         return this.botService.resetBotForNewDay();
     }
+
+    @Post('unlock-bot-for-exception')
+    resetIsLockingWhenHaveException() {
+        // set crawled_today = 0
+        return this.botService.unstuckBotLocking();
+    }
+
+    @Get('get-bot-ui')
+    getBotUI() {
+        // set crawled_today = 0
+        return this.botService.getBotUI();
+    }
 }

@@ -39,4 +39,14 @@ export class BotService {
         const result = await this.botResource.resetCrawledToday();
         return result;
     }
+
+    async unstuckBotLocking() {
+        const result = await this.botResource.unstuckBotLocking();
+        return result;
+    }
+
+    async getBotUI() {
+        const data = await this.botResource.getBotUIData();
+        return data;
+    }
 }

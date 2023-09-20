@@ -5,12 +5,14 @@ import {
     JoinColumn,
     ManyToOne,
     Unique,
-    OneToMany
+    OneToMany,
+    OneToOne
 } from 'typeorm';
 import {LeagueEntity} from "../../league/league.entity";
 import {BotEavAttributeValue} from "../../bot-random/entity/bot.eav.attribute.value";
 import {MatchEavAttributeValue} from "./match.eav.attribute.value";
 import { BotListItem } from '../../bot-random/entity/bot.list.item';
+import { MatchResult } from './match.result';
 
 @Entity()
 @Unique(['home_name', 'away_name', 'date'])
@@ -58,6 +60,13 @@ export class NewMatchEntity {
         { onDelete: 'CASCADE' },
     )
     botEavValues: BotEavAttributeValue[];
+
+    @OneToOne(
+        () => MatchResult,
+        (MatchResult) => MatchResult.matchEntity,
+        { onDelete: 'CASCADE' },
+    )
+    matchResult: MatchResult
 
     @OneToMany(
         () => BotListItem,

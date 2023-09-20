@@ -3,9 +3,12 @@ import {
     Column,
     PrimaryGeneratedColumn,
     Unique,
-    OneToMany
+    OneToMany,
+    JoinColumn,
+    OneToOne
 } from 'typeorm';
 import {LeagueEntity} from "../../league/league.entity";
+import { NewMatchEntity } from './new.match.entity';
 
 @Entity()
 @Unique(['home_name', 'away_name', 'date'])
@@ -40,7 +43,13 @@ export class MatchResult {
     @Column({nullable: true})
     away_corner: string;
 
+    @Column({nullable: true})
+    match_id: number;
+
     // @ManyToOne(() => LeagueEntity, (LeagueEntity) => LeagueEntity.newMatches, { onDelete: 'CASCADE' })
     // @JoinColumn([{ name: 'league_id', referencedColumnName: 'entity_id' }])
     // league: LeagueEntity;
+    @OneToOne(() => NewMatchEntity, (NewMatchEntity) => NewMatchEntity.matchResult, {},)
+    @JoinColumn([{ name: 'match_id', referencedColumnName: 'entity_id' }])
+    matchEntity: NewMatchEntity
 }

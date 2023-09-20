@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany, UpdateDateColumn } from 'typeorm';
 import { BotEavAttributeValue } from './bot.eav.attribute.value';
 import { BotListItem } from './bot.list.item';
 import { BotListEntity } from './bot.list.entity';
@@ -16,6 +16,9 @@ export class BotRandomEntity {
 
   @Column({ default: 0 })
   is_locking: number;
+
+  @UpdateDateColumn({ type: "timestamp", default: () => "CURRENT_TIMESTAMP(6)", onUpdate: "CURRENT_TIMESTAMP(6)" })
+  updated_at: Date;
 
   @OneToMany(
     () => BotEavAttributeValue,

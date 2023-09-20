@@ -94,3 +94,11 @@ min_total_match_default =  6;
 odd_range = 0;
 start_over_under_value = 3.75;
 over_under_range = 4.5;
+
+
+SQL:
+SELECT COUNT(*) FROM `bot_random_entity` WHERE crawled_today > 0
+SELECT * FROM `bot_random_entity` WHERE is_locking = 1
+
+
+

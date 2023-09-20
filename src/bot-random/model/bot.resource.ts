@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { DataSource, Repository } from 'typeorm';
+import { DataSource, Repository, MoreThan } from 'typeorm';
 import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { BotRandomEntity } from '../entity/bot.entity';
 import { EavAttribute } from '../../eav/entity/eav.attribute';
@@ -117,6 +117,34 @@ export class BotResource {
           }
     }
 
+    async unstuckBotLocking() : Promise<any>
+    {
+      var today = new Date();
+      console.log(today)
+        try {
+          let next1h = new Date(Math.abs(+new Date() + 3600000));
+          let data = await this.botRepository.createQueryBuilder('bot')
+                    .where('bot.updated_at > :start_at', { start_at: next1h })
+                    .andWhere('is_locking = 1')
+                    .getMany();
+
+          if (data.length > 0) {
+            let botIds = [];
+            data.forEach( bot => {
+              botIds.push(bot["entity_id"]);
+            })
+            await this.dataSource
+                .createQueryBuilder(BotRandomEntity, "botRandom")
+                .update()
+                .set({ is_locking: 0})
+                .execute();
+          }
+          return true;
+          } catch (error) {
+            return false;
+          }
+    }
+
     async lockBotDataInQueue(botIds: Array <any>) : Promise<any>
     {
         try {
@@ -142,6 +170,37 @@ export class BotResource {
               .where("entity_id IN (:...values)", { values: botIds})
               .execute();
             return true;
+          } catch (error) {
+            return false;
+          }
+    }
+
+    async getBotUIData() : Promise<any>
+    {
+        try {
+          let UIData = await this.botRepository.find({
+              // where: {
+              //     crawled_today: LessThan(this.max_crawl),
+              //     is_locking: 0,
+              // },
+              relations: {
+                  botEavValues: true,
+                  botList: {
+                    items: {
+                      match: {
+                        matchResult: true
+                      }
+                    }
+                  }
+              },
+              // order: {
+              //     crawled_today: "ASC",
+              //     entity_id: "ASC",
+              // },
+              take: 100,
+              skip: 0,
+          });
+            return UIData;
           } catch (error) {
             return false;
           }
