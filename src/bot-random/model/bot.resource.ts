@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { DataSource, Repository, MoreThan } from 'typeorm';
+import { DataSource, Repository, IsNull, Not } from 'typeorm';
 import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { BotRandomEntity } from '../entity/bot.entity';
 import { EavAttribute } from '../../eav/entity/eav.attribute';
@@ -189,7 +189,12 @@ export class BotResource {
                     }
                   }
               },
-              take: 50,
+              where: {
+                  botList: {
+                    list_id: Not(IsNull())
+                  }
+              },
+              take: 10,
               skip: 0,
           });
             return UIData;
