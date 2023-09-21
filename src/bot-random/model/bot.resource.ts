@@ -189,7 +189,7 @@ export class BotResource {
                     }
                   }
               },
-              take: 300,
+              take: 50,
               skip: 0,
           });
             return UIData;

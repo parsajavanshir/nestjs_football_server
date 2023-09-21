@@ -31,10 +31,10 @@ export class MatchResult {
     @Column()
     away_name: string;
 
-    @Column()
+    @Column({nullable: true})
     home_result: string;
 
-    @Column()
+    @Column({nullable: true})
     away_result: string;
 
     @Column({nullable: true})

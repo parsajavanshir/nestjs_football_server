@@ -38,13 +38,13 @@ export class NewMatchEntity {
     @Column()
     away_name: string;
 
-    @Column()
+    @Column({nullable: true})
     home_position: number;
 
-    @Column()
+    @Column({nullable: true})
     away_position: number;
 
-    @Column()
+    @Column({nullable: true})
     odd: string;
 
     @Column({nullable: true})

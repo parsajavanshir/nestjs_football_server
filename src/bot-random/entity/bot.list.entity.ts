@@ -19,6 +19,9 @@ export class BotListEntity {
   @Index()
   bot_id: number;
 
+  @Column({nullable: true})
+  status: number;
+
   @ManyToOne(
     () => BotRandomEntity,
     (BotRandomEntity) => BotRandomEntity.botList,

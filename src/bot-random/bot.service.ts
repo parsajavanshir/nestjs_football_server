@@ -31,7 +31,9 @@ export class BotService {
     }
 
     async generateBotMatchSingleAttribute() {
+        console.log("Generate start at: " + new Date());
         const result = await this.botGenerator.generateBotMatchSingleAttribute();
+        console.log("Generate end at: " + new Date());
         return result;
     }
 
