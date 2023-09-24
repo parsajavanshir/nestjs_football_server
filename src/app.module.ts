@@ -22,6 +22,7 @@ import { BotListItem } from './bot-random/entity/bot.list.item';
 import { BotListEntity } from './bot-random/entity/bot.list.entity';
 import {EavModule} from "./eav/eav.module";
 import { MatchResult } from './match/entity/match.result';
+import { MatchLiveContent } from './match/entity/match.live.content';
 
 @Module({
   imports: [
@@ -33,7 +34,7 @@ import { MatchResult } from './match/entity/match.result';
       password: 'admin123',
       database: 'soccer_fly',
       entities: [
-          UserEntity, StarMatch, CrawlLiveContent, NewMatchEntity, MatchEavAttributeValue, LeagueEntity,
+          UserEntity, StarMatch, CrawlLiveContent, NewMatchEntity, MatchEavAttributeValue, LeagueEntity, MatchLiveContent,
         BotRandomEntity, EavAttribute, EavAttributeType, BotEavAttributeValue, BotListItem, BotListEntity, MatchResult],
       synchronize: true,
     }),

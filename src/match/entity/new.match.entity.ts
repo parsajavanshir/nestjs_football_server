@@ -50,9 +50,9 @@ export class NewMatchEntity {
     @Column({nullable: true})
     over_under: string;
 
-    // @ManyToOne(() => LeagueEntity, (LeagueEntity) => LeagueEntity.newMatches, { onDelete: 'CASCADE' })
-    // @JoinColumn([{ name: 'league_id', referencedColumnName: 'entity_id' }])
-    // league: LeagueEntity;
+    @ManyToOne(() => LeagueEntity, (LeagueEntity) => LeagueEntity.newMatches, { onDelete: 'CASCADE' })
+    @JoinColumn([{ name: 'league_id', referencedColumnName: 'entity_id' }])
+    league: LeagueEntity;
 
     @OneToMany(
         () => MatchEavAttributeValue,

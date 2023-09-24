@@ -27,6 +27,10 @@ export class BotResource {
 
     async insertMatchForBotList(botId: number, matchForBotList: Array<any>) : Promise<any>
     {
+        const queryRunner = this.dataSource.createQueryRunner()
+        await queryRunner.connect()
+        // lets now open a new transaction:
+        await queryRunner.startTransaction()
         try {
             for (const index in matchForBotList) {
               let newList = await this.botListEntityRepository.save({bot_id: botId});
@@ -40,8 +44,13 @@ export class BotResource {
                 )
               }
             }
+            await queryRunner.commitTransaction()
           } catch (error) {
-            return false;
+            // since we have errors let's rollback changes we made
+            await queryRunner.rollbackTransaction()
+          } finally {
+              // you need to release query runner which is manually created:
+              await queryRunner.release()
           }
     }
 
@@ -179,11 +188,45 @@ export class BotResource {
     {
         try {
           let UIData = await this.botRepository.find({
+              select: {
+                entity_id: true,
+                name: true,
+                botEavValues: {
+                  value_id: true,
+                  value: true,
+                },
+                botList: {
+                  list_id: true,
+                  status: true,
+                  items: {
+                    item_id: true,
+                    match: {
+                      entity_id: true,
+                      datetime: true,
+                      result: true,
+                      home_name: true,
+                      away_name: true,
+                      home_position: true,
+                      away_position: true,
+                      odd: true,
+                      over_under: true,
+                      matchResult: {
+                        entity_id: true,
+                        home_result: true,
+                        away_result: true,
+                        home_corner: true,
+                        away_corner: true,
+                      }
+                    } 
+                  }
+                }
+              },
               relations: {
                   botEavValues: true,
                   botList: {
                     items: {
                       match: {
+                        league: true,
                         matchResult: true
                       }
                     }
