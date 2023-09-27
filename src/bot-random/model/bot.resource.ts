@@ -128,8 +128,6 @@ export class BotResource {
 
     async unstuckBotLocking() : Promise<any>
     {
-      var today = new Date();
-      console.log(today)
         try {
           let next1h = new Date(Math.abs(+new Date() + 3600000));
           let data = await this.botRepository.createQueryBuilder('bot')
@@ -249,6 +247,7 @@ export class BotResource {
     async getBotListStatus(botIds) : Promise<any>
     {
         try {
+          let botDataStatus = {};
           let win = await this.dataSource
               .createQueryBuilder(BotListEntity, "botList")
               .select(['bot_id'])
@@ -257,7 +256,31 @@ export class BotResource {
               .andWhere("bot_id IN (:...values)", { values: botIds})
               .groupBy('bot_id, status')
               .getRawMany();
-            return win;
+          if (win.length > 0) {
+            win.forEach( item => {
+              botDataStatus[item.bot_id] = {};
+              botDataStatus[item.bot_id]['win'] = item.status_count;
+            })
+          }
+          let lose = await this.dataSource
+              .createQueryBuilder(BotListEntity, "botList")
+              .select(['bot_id'])
+              .addSelect("COUNT(status) AS status_count")
+              .where("status = 0")
+              .andWhere("bot_id IN (:...values)", { values: botIds})
+              .groupBy('bot_id, status')
+              .getRawMany();
+          if (lose.length > 0) {
+            lose.forEach( item => {
+              if (botDataStatus.hasOwnProperty(item.bot_id)) {
+                botDataStatus[item.bot_id]['lose'] = item.status_count;
+              } else {
+                botDataStatus[item.bot_id] = {};
+              botDataStatus[item.bot_id]['lose'] = item.status_count;
+              }
+            })
+          }
+          return botDataStatus;
           } catch (error) {
             return false;
           }

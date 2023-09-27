@@ -30,7 +30,7 @@ export class MassResource {
             where: {
                 status: IsNull()
             },
-            take: 500
+            take: 2000
         });
 
         let botData = {};
