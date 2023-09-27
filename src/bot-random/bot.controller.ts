@@ -1,6 +1,6 @@
 import { Body, Controller, Post, Get } from '@nestjs/common';
 import {BotService} from "./bot.service";
-import { CreateBotDTO } from './dto';
+import { CreateBotDTO, GetBotStatusDTO } from './dto';
 
 @Controller('bot')
 export class BotController {
@@ -38,5 +38,10 @@ export class BotController {
     getBotUI() {
         // set crawled_today = 0
         return this.botService.getBotUI();
+    }
+
+    @Post('get-bot-list-status')
+    getBotListStatus(@Body() getBotStatusDTO: GetBotStatusDTO) {
+        return this.botService.getBotListStatus(JSON.parse(getBotStatusDTO.bot_ids));
     }
 }

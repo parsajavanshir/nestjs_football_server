@@ -51,4 +51,9 @@ export class BotService {
         const data = await this.botResource.getBotUIData();
         return data;
     }
+
+    async getBotListStatus(botIds) {
+        const data = await this.botResource.getBotListStatus(botIds);
+        return data;
+    }
 }

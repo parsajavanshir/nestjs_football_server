@@ -12,3 +12,8 @@ export class EavAttributeValueDTO {
     @IsString()
     value: string;
 }
+
+export class GetBotStatusDTO {
+    @IsString()
+    bot_ids: string;
+}

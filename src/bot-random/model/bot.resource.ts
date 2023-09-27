@@ -245,4 +245,21 @@ export class BotResource {
             return false;
           }
     }
+
+    async getBotListStatus(botIds) : Promise<any>
+    {
+        try {
+          let win = await this.dataSource
+              .createQueryBuilder(BotListEntity, "botList")
+              .select(['bot_id'])
+              .addSelect("COUNT(status) AS status_count")
+              .where("status = 1")
+              .andWhere("bot_id IN (:...values)", { values: botIds})
+              .groupBy('bot_id, status')
+              .getRawMany();
+            return win;
+          } catch (error) {
+            return false;
+          }
+    }
 }
