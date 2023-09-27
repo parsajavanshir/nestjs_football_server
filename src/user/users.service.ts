@@ -43,7 +43,7 @@ export class UsersService {
 
       return user.entity_id;
     } catch (error) {
-      return false;
+      return error;
     }
   }
 
