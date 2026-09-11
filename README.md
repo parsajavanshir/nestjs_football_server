@@ -1,104 +1,41 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# NestJS Football Server
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Legacy backend project built with **NestJS** and **TypeScript** for football-related data and services.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Tech stack
 
-## Description
+- NestJS / TypeScript
+- TypeORM
+- MySQL
+- JWT authentication
+- Swagger / OpenAPI
+- Firebase Admin
+- Jest
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Main modules
 
-## Installation
+The codebase includes modules for authentication, users, leagues, matches, crawling/data collection, migrations, mass updates, Firebase integration, and bot-related processing.
+
+## Setup
 
 ```bash
-$ npm install
+npm install
+npm run start:dev
 ```
 
-## Running the app
+### Common commands
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+npm run build
+npm test
+npm run test:e2e
+npm run typeorm:run
 ```
 
-## Test
+## Security
 
-```bash
-# unit tests
-$ npm run test
+Do not commit credentials, API keys, access tokens, database passwords, or private configuration to the repository. Use environment variables or a secrets manager instead.
 
-# e2e tests
-$ npm run test:e2e
+## Status
 
-# test coverage
-$ npm run test:cov
-```
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-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
-Nest is [MIT licensed](LICENSE).
-
-How to migrate: 
-npm run typeorm migration:create -n ./src/migration/BotEavAttribute
-npm run typeorm migration:run -- -d ./src/data-source.ts
-
-
-default range
-odd_range = 1.5;
-start_over_under_value = 2;
-over_under_range = 3.5;
-all_odd = true;
-league_name = [];
-bettingObj = [
-    'min_total_match', 'odd', 'over_under'
-]
-min_total_match_range = {min: 5,max: 10};
-bet_in_match = ['over', 'under', 'favorite', 'underdog'];
-match_amount = 4;
-min_total_match_default =  6;
-
-odd_range = 0;
-start_over_under_value = 3.75;
-over_under_range = 4.5;
-
-
-SQL:
-SELECT COUNT(*) FROM `bot_random_entity` WHERE crawled_today > 0
-SELECT * FROM `bot_random_entity` WHERE is_locking = 1
-
-
-
+This is an older project kept as part of my backend-development portfolio and learning history.
